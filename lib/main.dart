@@ -5,6 +5,7 @@ import 'screen/login_screen.dart';
 import 'screen/register_screen.dart';
 import 'screen/home_screen.dart';
 import 'screen/search_screen.dart';
+import 'screen/add_report_screen.dart';
 
 void main() {
   runApp(const ReClaimApp());
@@ -32,6 +33,7 @@ class ReClaimApp extends StatelessWidget {
         '/register': (context) => const RegisterScreen(),
         '/home': (context) => const HomeScreen(),
         '/search': (context) => const SearchScreen(),
+        '/add-report': (context) => const AddReportScreen(),
       },
     );
   }

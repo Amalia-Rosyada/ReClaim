@@ -14,8 +14,7 @@ class _AddReportScreenState extends State<AddReportScreen> {
 
   final TextEditingController _itemController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
-  final TextEditingController _descriptionController =
-      TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
 
   @override
   void dispose() {
@@ -56,10 +55,7 @@ class _AddReportScreenState extends State<AddReportScreen> {
     });
   }
 
-  Widget _buildTypeButton({
-    required String title,
-    required IconData icon,
-  }) {
+  Widget _buildTypeButton({required String title, required IconData icon}) {
     final bool selected = _reportType == title;
 
     return Expanded(
@@ -81,11 +77,7 @@ class _AddReportScreenState extends State<AddReportScreen> {
           ),
           child: Column(
             children: [
-              Icon(
-                icon,
-                size: 28,
-                color: selected ? primaryBlue : Colors.grey,
-              ),
+              Icon(icon, size: 28, color: selected ? primaryBlue : Colors.grey),
               const SizedBox(height: 8),
               Text(
                 title,
@@ -115,31 +107,21 @@ class _AddReportScreenState extends State<AddReportScreen> {
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,
-        prefixIcon: Icon(
-          icon,
-          color: primaryBlue,
-        ),
+        prefixIcon: Icon(icon, color: primaryBlue),
         alignLabelWithHint: maxLines > 1,
         filled: true,
         fillColor: Colors.grey.shade50,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: BorderSide(
-            color: Colors.grey.shade300,
-          ),
+          borderSide: BorderSide(color: Colors.grey.shade300),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: BorderSide(
-            color: Colors.grey.shade300,
-          ),
+          borderSide: BorderSide(color: Colors.grey.shade300),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(
-            color: primaryBlue,
-            width: 1.5,
-          ),
+          borderSide: const BorderSide(color: primaryBlue, width: 1.5),
         ),
       ),
     );
@@ -155,11 +137,7 @@ class _AddReportScreenState extends State<AddReportScreen> {
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios_new,
-            color: darkBlue,
-            size: 20,
-          ),
+          icon: const Icon(Icons.arrow_back_ios_new, color: darkBlue, size: 20),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -193,10 +171,7 @@ class _AddReportScreenState extends State<AddReportScreen> {
 
             Text(
               'Bantu orang lain menemukan atau mengembalikan barang.',
-              style: TextStyle(
-                color: textBlue,
-                fontSize: 13,
-              ),
+              style: TextStyle(color: textBlue, fontSize: 13),
             ),
 
             const SizedBox(height: 24),
@@ -278,9 +253,7 @@ class _AddReportScreenState extends State<AddReportScreen> {
               decoration: BoxDecoration(
                 color: lightBlue,
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: primaryBlue.withValues(alpha: 0.3),
-                ),
+                border: Border.all(color: primaryBlue.withValues(alpha: 0.3)),
               ),
               child: InkWell(
                 borderRadius: BorderRadius.circular(16),
@@ -312,10 +285,7 @@ class _AddReportScreenState extends State<AddReportScreen> {
                     Text(
                       'Tambahkan foto agar barang lebih mudah dikenali',
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: textBlue,
-                        fontSize: 11,
-                      ),
+                      style: TextStyle(color: textBlue, fontSize: 11),
                     ),
                   ],
                 ),
@@ -340,10 +310,7 @@ class _AddReportScreenState extends State<AddReportScreen> {
                 ),
                 child: const Text(
                   'Kirim Laporan',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                 ),
               ),
             ),

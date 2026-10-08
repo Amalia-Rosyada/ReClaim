@@ -6,6 +6,8 @@ import 'screen/register_screen.dart';
 import 'screen/home_screen.dart';
 import 'screen/search_screen.dart';
 import 'screen/add_report_screen.dart';
+import 'screen/notification_screen.dart';
+import 'screen/profile_screen.dart';
 
 void main() {
   runApp(const ReClaimApp());
@@ -19,6 +21,7 @@ class ReClaimApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'ReClaim',
+
       theme: ThemeData(
         useMaterial3: true,
         fontFamily: 'Arial',
@@ -26,7 +29,9 @@ class ReClaimApp extends StatelessWidget {
           seedColor: const Color(0xFF3989E8),
         ),
       ),
+
       initialRoute: '/',
+
       routes: {
         '/': (context) => const SplashScreen(),
         '/login': (context) => const LoginScreen(),
@@ -34,6 +39,8 @@ class ReClaimApp extends StatelessWidget {
         '/home': (context) => const HomeScreen(),
         '/search': (context) => const SearchScreen(),
         '/add-report': (context) => const AddReportScreen(),
+        '/notification': (context) => const NotificationScreen(),
+        '/profile': (context) => const ProfileScreen(),
       },
     );
   }

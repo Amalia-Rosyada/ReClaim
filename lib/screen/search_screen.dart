@@ -15,6 +15,10 @@ class _SearchScreenState extends State<SearchScreen> {
 
   String _selectedFilter = 'Semua';
 
+  // ============================================================
+  // DATA BARANG SEMENTARA
+  // ============================================================
+
   final List<Map<String, String>> _items = [
     {
       'name': 'Tas Hitam',
@@ -53,6 +57,10 @@ class _SearchScreenState extends State<SearchScreen> {
     },
   ];
 
+  // ============================================================
+  // INIT
+  // ============================================================
+
   @override
   void initState() {
     super.initState();
@@ -61,6 +69,10 @@ class _SearchScreenState extends State<SearchScreen> {
       setState(() {});
     });
   }
+
+  // ============================================================
+  // DISPOSE
+  // ============================================================
 
   @override
   void dispose() {
@@ -95,18 +107,23 @@ class _SearchScreenState extends State<SearchScreen> {
           _selectedFilter == 'Semua' ||
           status == _selectedFilter;
 
-      return matchesSearch && matchesFilter;
+      return matchesSearch &&
+          matchesFilter;
     }).toList();
   }
 
+  // ============================================================
+  // SNACKBAR
+  // ============================================================
+
   void _showMessage(String message) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text(message),
-      behavior: SnackBarBehavior.floating,
-    ),
-  );
-}
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
 
   // ============================================================
   // BUILD
@@ -128,16 +145,7 @@ class _SearchScreenState extends State<SearchScreen> {
         elevation: 0,
         scrolledUnderElevation: 0,
 
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios_new,
-            color: darkBlue,
-            size: 21,
-          ),
-        ),
+        automaticallyImplyLeading: false,
 
         title: const Text(
           'Pencarian',
@@ -164,31 +172,37 @@ class _SearchScreenState extends State<SearchScreen> {
                   24,
                   20,
                 ),
+
                 child: Column(
                   crossAxisAlignment:
                       CrossAxisAlignment.start,
-                  children: [
 
+                  children: [
                     // ==================================================
                     // SEARCH BAR
                     // ==================================================
 
                     Container(
                       height: 54,
+
                       decoration: BoxDecoration(
                         color: lightBlue,
                         borderRadius:
                             BorderRadius.circular(17),
                       ),
+
                       child: TextField(
                         controller:
                             _searchController,
+
                         textInputAction:
                             TextInputAction.search,
+
                         decoration:
                             InputDecoration(
                           hintText:
                               'Cari barang...',
+
                           hintStyle:
                               const TextStyle(
                             color: textBlue,
@@ -210,6 +224,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                         _searchController
                                             .clear();
                                       },
+
                                       icon:
                                           const Icon(
                                         Icons.close,
@@ -239,15 +254,31 @@ class _SearchScreenState extends State<SearchScreen> {
 
                     SizedBox(
                       height: 42,
+
                       child: ListView(
                         scrollDirection:
                             Axis.horizontal,
+
                         children: [
-                          _filterButton('Semua'),
-                          const SizedBox(width: 10),
-                          _filterButton('Hilang'),
-                          const SizedBox(width: 10),
-                          _filterButton('Ditemukan'),
+                          _filterButton(
+                            'Semua',
+                          ),
+
+                          const SizedBox(
+                            width: 10,
+                          ),
+
+                          _filterButton(
+                            'Hilang',
+                          ),
+
+                          const SizedBox(
+                            width: 10,
+                          ),
+
+                          _filterButton(
+                            'Ditemukan',
+                          ),
                         ],
                       ),
                     ),
@@ -262,6 +293,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       mainAxisAlignment:
                           MainAxisAlignment
                               .spaceBetween,
+
                       children: [
                         const Text(
                           'Hasil Pencarian',
@@ -275,7 +307,8 @@ class _SearchScreenState extends State<SearchScreen> {
 
                         Text(
                           '${results.length} barang',
-                          style: const TextStyle(
+                          style:
+                              const TextStyle(
                             fontSize: 13,
                             color: textBlue,
                           ),
@@ -286,7 +319,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     const SizedBox(height: 14),
 
                     // ==================================================
-                    // HASIL
+                    // HASIL PENCARIAN
                     // ==================================================
 
                     if (results.isEmpty)
@@ -298,6 +331,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               const EdgeInsets.only(
                             bottom: 14,
                           ),
+
                           child:
                               _itemCard(item),
                         ),
@@ -333,18 +367,22 @@ class _SearchScreenState extends State<SearchScreen> {
           _selectedFilter = title;
         });
       },
+
       child: Container(
         padding:
             const EdgeInsets.symmetric(
           horizontal: 20,
           vertical: 10,
         ),
+
         decoration: BoxDecoration(
           color: isSelected
               ? primaryBlue
               : Colors.white,
+
           borderRadius:
               BorderRadius.circular(20),
+
           border: Border.all(
             color: isSelected
                 ? primaryBlue
@@ -353,14 +391,19 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
           ),
         ),
+
         child: Text(
           title,
+
           style: TextStyle(
             color: isSelected
                 ? Colors.white
                 : textBlue,
+
             fontSize: 14,
-            fontWeight: FontWeight.w600,
+
+            fontWeight:
+                FontWeight.w600,
           ),
         ),
       ),
@@ -381,47 +424,59 @@ class _SearchScreenState extends State<SearchScreen> {
       onTap: () {
         _showItemDetail(item);
       },
+
       child: Container(
         padding:
             const EdgeInsets.all(15),
+
         decoration: BoxDecoration(
           color: Colors.white,
+
           borderRadius:
               BorderRadius.circular(18),
+
           border: Border.all(
             color: const Color(
               0xFFE1EAF4,
             ),
           ),
+
           boxShadow: [
             BoxShadow(
               color: Colors.black
                   .withValues(alpha: 0.03),
+
               blurRadius: 8,
+
               offset:
                   const Offset(0, 3),
             ),
           ],
         ),
+
         child: Row(
           children: [
-
             // ==================================================
-            // ICON BARANG
+            // ICON
             // ==================================================
 
             Container(
               width: 58,
               height: 58,
+
               decoration: BoxDecoration(
                 color: lightBlue,
+
                 borderRadius:
                     BorderRadius.circular(15),
               ),
+
               alignment:
                   Alignment.center,
+
               child: Text(
                 item['icon']!,
+
                 style: const TextStyle(
                   fontSize: 28,
                 ),
@@ -431,18 +486,20 @@ class _SearchScreenState extends State<SearchScreen> {
             const SizedBox(width: 14),
 
             // ==================================================
-            // INFORMASI BARANG
+            // INFORMASI
             // ==================================================
 
             Expanded(
               child: Column(
                 crossAxisAlignment:
                     CrossAxisAlignment.start,
-                children: [
 
+                children: [
                   Text(
                     item['name']!,
-                    style: const TextStyle(
+
+                    style:
+                        const TextStyle(
                       fontSize: 16,
                       fontWeight:
                           FontWeight.bold,
@@ -455,16 +512,22 @@ class _SearchScreenState extends State<SearchScreen> {
                   Row(
                     children: [
                       const Icon(
-                        Icons.location_on_outlined,
+                        Icons
+                            .location_on_outlined,
                         size: 15,
                         color: textBlue,
                       ),
+
                       const SizedBox(width: 4),
+
                       Expanded(
                         child: Text(
                           item['location']!,
+
                           overflow:
-                              TextOverflow.ellipsis,
+                              TextOverflow
+                                  .ellipsis,
+
                           style:
                               const TextStyle(
                             fontSize: 13,
@@ -479,7 +542,9 @@ class _SearchScreenState extends State<SearchScreen> {
 
                   Text(
                     item['time']!,
-                    style: const TextStyle(
+
+                    style:
+                        const TextStyle(
                       fontSize: 12,
                       color: textBlue,
                     ),
@@ -496,10 +561,12 @@ class _SearchScreenState extends State<SearchScreen> {
 
             Container(
               padding:
-                  const EdgeInsets.symmetric(
+                  const EdgeInsets
+                      .symmetric(
                 horizontal: 9,
                 vertical: 6,
               ),
+
               decoration: BoxDecoration(
                 color: isLost
                     ? const Color(
@@ -508,15 +575,22 @@ class _SearchScreenState extends State<SearchScreen> {
                     : const Color(
                         0xFFE8F7EE,
                       ),
+
                 borderRadius:
-                    BorderRadius.circular(10),
+                    BorderRadius.circular(
+                  10,
+                ),
               ),
+
               child: Text(
                 item['status']!,
+
                 style: TextStyle(
                   fontSize: 11,
+
                   fontWeight:
                       FontWeight.w600,
+
                   color: isLost
                       ? const Color(
                           0xFFE68A2E,
@@ -540,20 +614,25 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget _emptyResult() {
     return Container(
       width: double.infinity,
+
       padding:
           const EdgeInsets.symmetric(
         vertical: 60,
         horizontal: 20,
       ),
+
       child: Column(
         children: [
           Container(
             width: 75,
             height: 75,
-            decoration: BoxDecoration(
+
+            decoration:
+                const BoxDecoration(
               color: lightBlue,
               shape: BoxShape.circle,
             ),
+
             child: const Icon(
               Icons.search_off,
               size: 36,
@@ -565,9 +644,11 @@ class _SearchScreenState extends State<SearchScreen> {
 
           const Text(
             'Barang tidak ditemukan',
+
             style: TextStyle(
               fontSize: 17,
-              fontWeight: FontWeight.bold,
+              fontWeight:
+                  FontWeight.bold,
               color: darkBlue,
             ),
           ),
@@ -575,8 +656,12 @@ class _SearchScreenState extends State<SearchScreen> {
           const SizedBox(height: 7),
 
           const Text(
-            'Coba gunakan kata kunci lain\natau ubah filter pencarian.',
-            textAlign: TextAlign.center,
+            'Coba gunakan kata kunci lain\n'
+            'atau ubah filter pencarian.',
+
+            textAlign:
+                TextAlign.center,
+
             style: TextStyle(
               fontSize: 13,
               color: textBlue,
@@ -589,7 +674,7 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   // ============================================================
-  // DETAIL SEMENTARA
+  // DETAIL BARANG
   // ============================================================
 
   void _showItemDetail(
@@ -597,68 +682,99 @@ class _SearchScreenState extends State<SearchScreen> {
   ) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.white,
+
+      backgroundColor:
+          Colors.white,
+
       isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
+
+      shape:
+          const RoundedRectangleBorder(
+        borderRadius:
+            BorderRadius.vertical(
           top: Radius.circular(25),
         ),
       ),
+
       builder: (context) {
         return Padding(
-          padding: const EdgeInsets.fromLTRB(
+          padding:
+              const EdgeInsets.fromLTRB(
             24,
             20,
             24,
             30,
           ),
+
           child: Column(
             mainAxisSize:
                 MainAxisSize.min,
+
             children: [
+              // GARIS ATAS
 
               Container(
                 width: 45,
                 height: 5,
-                decoration: BoxDecoration(
-                  color: const Color(
+
+                decoration:
+                    BoxDecoration(
+                  color:
+                      const Color(
                     0xFFD8E5F3,
                   ),
+
                   borderRadius:
-                      BorderRadius.circular(10),
+                      BorderRadius.circular(
+                    10,
+                  ),
                 ),
               ),
 
               const SizedBox(height: 25),
 
+              // ICON
+
               Text(
                 item['icon']!,
-                style: const TextStyle(
+
+                style:
+                    const TextStyle(
                   fontSize: 50,
                 ),
               ),
 
               const SizedBox(height: 12),
 
+              // NAMA
+
               Text(
                 item['name']!,
-                style: const TextStyle(
+
+                style:
+                    const TextStyle(
                   fontSize: 22,
-                  fontWeight: FontWeight.bold,
+                  fontWeight:
+                      FontWeight.bold,
                   color: darkBlue,
                 ),
               ),
 
               const SizedBox(height: 8),
 
+              // STATUS
+
               Text(
                 item['status']!,
+
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight:
                       FontWeight.w600,
+
                   color:
-                      item['status'] == 'Hilang'
+                      item['status'] ==
+                              'Hilang'
                           ? const Color(
                               0xFFE68A2E,
                             )
@@ -670,19 +786,28 @@ class _SearchScreenState extends State<SearchScreen> {
 
               const SizedBox(height: 18),
 
+              // LOKASI
+
               Row(
                 mainAxisAlignment:
-                    MainAxisAlignment.center,
+                    MainAxisAlignment
+                        .center,
+
                 children: [
                   const Icon(
-                    Icons.location_on_outlined,
+                    Icons
+                        .location_on_outlined,
                     color: textBlue,
                     size: 18,
                   ),
+
                   const SizedBox(width: 5),
+
                   Text(
                     item['location']!,
-                    style: const TextStyle(
+
+                    style:
+                        const TextStyle(
                       color: textBlue,
                       fontSize: 14,
                     ),
@@ -692,9 +817,13 @@ class _SearchScreenState extends State<SearchScreen> {
 
               const SizedBox(height: 5),
 
+              // WAKTU
+
               Text(
                 item['time']!,
-                style: const TextStyle(
+
+                style:
+                    const TextStyle(
                   color: textBlue,
                   fontSize: 13,
                 ),
@@ -702,24 +831,34 @@ class _SearchScreenState extends State<SearchScreen> {
 
               const SizedBox(height: 25),
 
+              // BUTTON DETAIL
+
               SizedBox(
                 width: double.infinity,
                 height: 52,
-                child: ElevatedButton(
+
+                child:
+                    ElevatedButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    Navigator.pop(
+                      context,
+                    );
 
                     _showMessage(
                       'Detail barang akan dikembangkan selanjutnya.',
                     );
                   },
+
                   style:
                       ElevatedButton.styleFrom(
                     backgroundColor:
                         primaryBlue,
+
                     foregroundColor:
                         Colors.white,
+
                     elevation: 0,
+
                     shape:
                         RoundedRectangleBorder(
                       borderRadius:
@@ -728,9 +867,13 @@ class _SearchScreenState extends State<SearchScreen> {
                       ),
                     ),
                   ),
-                  child: const Text(
+
+                  child:
+                      const Text(
                     'Lihat Detail',
-                    style: TextStyle(
+
+                    style:
+                        TextStyle(
                       fontSize: 16,
                       fontWeight:
                           FontWeight.bold,
@@ -751,75 +894,132 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Widget _bottomNavigationBar() {
     return Container(
-      decoration: const BoxDecoration(
+      decoration:
+          const BoxDecoration(
         color: Colors.white,
+
         border: Border(
           top: BorderSide(
-            color: Color(0xFFE5ECF4),
+            color: Color(
+              0xFFE5ECF4,
+            ),
           ),
         ),
       ),
+
       child: SafeArea(
         child: Padding(
           padding:
               const EdgeInsets.symmetric(
-            horizontal: 12,
+            horizontal: 8,
             vertical: 8,
           ),
+
           child: Row(
             mainAxisAlignment:
-                MainAxisAlignment.spaceAround,
+                MainAxisAlignment
+                    .spaceAround,
+
             children: [
+              // BERANDA
 
               _navItem(
-                icon: Icons.home_outlined,
+                icon:
+                    Icons.home_outlined,
+
+                activeIcon:
+                    Icons.home_rounded,
+
                 label: 'Beranda',
+
                 selected: false,
+
                 onTap: () {
-                  Navigator.pushReplacementNamed(
+                  Navigator
+                      .pushReplacementNamed(
                     context,
                     '/home',
                   );
                 },
               ),
 
-              _navItem(
-                icon: Icons.search,
-                label: 'Pencarian',
-                selected: true,
-                onTap: () {},
-              ),
-
-              _navItem(
-                icon: Icons.add_circle_outline,
-                label: 'Tambah',
-                selected: false,
-                onTap: () {
-                  _showMessage(
-                    'Halaman tambah laporan akan dibuat selanjutnya.',
-                  );
-                },
-              ),
+              // PENCARIAN
 
               _navItem(
                 icon:
-                    Icons.notifications_none,
-                label: 'Notifikasi',
+                    Icons.search_outlined,
+
+                activeIcon:
+                    Icons.search_rounded,
+
+                label: 'Pencarian',
+
+                selected: true,
+
+                onTap: () {},
+              ),
+
+              // TAMBAH
+
+              _navItem(
+                icon: Icons
+                    .add_circle_outline_rounded,
+
+                activeIcon:
+                    Icons.add_circle_rounded,
+
+                label: 'Tambah',
+
                 selected: false,
+
                 onTap: () {
-                  _showMessage(
-                    'Halaman notifikasi akan dibuat selanjutnya.',
+                  Navigator.pushNamed(
+                    context,
+                    '/add-report',
                   );
                 },
               ),
 
+              // NOTIFIKASI
+
               _navItem(
-                icon: Icons.person_outline,
-                label: 'Profil',
+                icon: Icons
+                    .notifications_none_rounded,
+
+                activeIcon:
+                    Icons.notifications_rounded,
+
+                label: 'Notifikasi',
+
                 selected: false,
+
                 onTap: () {
-                  _showMessage(
-                    'Halaman profil akan dibuat selanjutnya.',
+                  Navigator
+                      .pushReplacementNamed(
+                    context,
+                    '/notification',
+                  );
+                },
+              ),
+
+              // PROFIL
+
+              _navItem(
+                icon:
+                    Icons.person_outline_rounded,
+
+                activeIcon:
+                    Icons.person_rounded,
+
+                label: 'Profil',
+
+                selected: false,
+
+                onTap: () {
+                  Navigator
+                      .pushReplacementNamed(
+                    context,
+                    '/profile',
                   );
                 },
               ),
@@ -836,23 +1036,32 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Widget _navItem({
     required IconData icon,
+    required IconData activeIcon,
     required String label,
     required bool selected,
     required VoidCallback onTap,
   }) {
     return GestureDetector(
       onTap: onTap,
+
       behavior:
           HitTestBehavior.opaque,
+
       child: SizedBox(
-        width: 62,
+        width: 65,
+
         child: Column(
           mainAxisSize:
               MainAxisSize.min,
+
           children: [
             Icon(
-              icon,
+              selected
+                  ? activeIcon
+                  : icon,
+
               size: 24,
+
               color: selected
                   ? primaryBlue
                   : textBlue,
@@ -862,13 +1071,17 @@ class _SearchScreenState extends State<SearchScreen> {
 
             Text(
               label,
+
               overflow:
                   TextOverflow.ellipsis,
+
               style: TextStyle(
                 fontSize: 10,
+
                 fontWeight: selected
                     ? FontWeight.w600
                     : FontWeight.normal,
+
                 color: selected
                     ? primaryBlue
                     : textBlue,

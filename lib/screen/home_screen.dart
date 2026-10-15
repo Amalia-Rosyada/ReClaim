@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 
 import 'splash_screen.dart';
@@ -5,14 +6,8 @@ import 'splash_screen.dart';
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  void _goTo(
-    BuildContext context,
-    String route,
-  ) {
-    Navigator.pushNamed(
-      context,
-      route,
-    );
+  void _goTo(BuildContext context, String route) {
+    Navigator.pushNamed(context, route);
   }
 
   @override
@@ -21,56 +16,52 @@ class HomeScreen extends StatelessWidget {
       backgroundColor: Colors.white,
 
       // ==================== APP BAR ====================
-
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-
         automaticallyImplyLeading: false,
 
-        title: const Text(
-          'ReClaim',
-          style: TextStyle(
-            color: darkBlue,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Image.asset(
+              'assets/logo.png',
+              width: 36,
+              height: 36,
+              fit: BoxFit.contain,
+            ),
+            const SizedBox(width: 10),
+            const Text(
+              'ReClaim',
+              style: TextStyle(
+                color: darkBlue,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
         ),
 
         actions: [
           IconButton(
             onPressed: () {
-              _goTo(
-                context,
-                '/notification',
-              );
+              _goTo(context, '/notification');
             },
-
             icon: const Icon(
               Icons.notifications_none_rounded,
               color: darkBlue,
             ),
           ),
-
           const SizedBox(width: 8),
         ],
       ),
 
       // ==================== BODY ====================
-
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(
-            24,
-            8,
-            24,
-            24,
-          ),
-
+          padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
           child: Column(
-            crossAxisAlignment:
-                CrossAxisAlignment.start,
-
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
                 'Halo, selamat datang! 👋',
@@ -95,38 +86,27 @@ class HomeScreen extends StatelessWidget {
 
               const SizedBox(height: 22),
 
-              // SEARCH
+              // ==================== SEARCH ====================
               GestureDetector(
                 onTap: () {
-                  _goTo(
-                    context,
-                    '/search',
-                  );
+                  _goTo(context, '/search');
                 },
-
                 child: Container(
                   height: 54,
-
-                  padding:
-                      const EdgeInsets.symmetric(
+                  padding: const EdgeInsets.symmetric(
                     horizontal: 18,
                   ),
-
                   decoration: BoxDecoration(
                     color: lightBlue,
-                    borderRadius:
-                        BorderRadius.circular(17),
+                    borderRadius: BorderRadius.circular(17),
                   ),
-
                   child: const Row(
                     children: [
                       Icon(
                         Icons.search_rounded,
                         color: primaryBlue,
                       ),
-
                       SizedBox(width: 12),
-
                       Text(
                         'Cari barang...',
                         style: TextStyle(
@@ -142,23 +122,16 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: 25),
 
               // ==================== MENU ====================
-
               Row(
                 children: [
                   Expanded(
                     child: _MenuCard(
-                      icon:
-                          Icons.search_rounded,
+                      icon: Icons.search_rounded,
                       title: 'Cari Barang',
-                      subtitle:
-                          'Temukan barang',
+                      subtitle: 'Temukan barang',
                       color: lightBlue,
-
                       onTap: () {
-                        _goTo(
-                          context,
-                          '/search',
-                        );
+                        _goTo(context, '/search');
                       },
                     ),
                   ),
@@ -169,18 +142,10 @@ class HomeScreen extends StatelessWidget {
                     child: _MenuCard(
                       icon: Icons.add_rounded,
                       title: 'Tambah Laporan',
-                      subtitle:
-                          'Laporkan barang',
-                      color:
-                          const Color(
-                        0xFFF0F7FF,
-                      ),
-
+                      subtitle: 'Laporkan barang',
+                      color: const Color(0xFFF0F7FF),
                       onTap: () {
-                        _goTo(
-                          context,
-                          '/add-report',
-                        );
+                        _goTo(context, '/add-report');
                       },
                     ),
                   ),
@@ -190,36 +155,27 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: 28),
 
               // ==================== LAPORAN ====================
-
               Row(
-                mainAxisAlignment:
-                    MainAxisAlignment.spaceBetween,
-
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
                     'Laporan Terbaru',
                     style: TextStyle(
                       fontSize: 19,
-                      fontWeight:
-                          FontWeight.bold,
+                      fontWeight: FontWeight.bold,
                       color: darkBlue,
                     ),
                   ),
 
                   TextButton(
                     onPressed: () {
-                      _goTo(
-                        context,
-                        '/search',
-                      );
+                      _goTo(context, '/search');
                     },
-
                     child: const Text(
                       'Lihat Semua',
                       style: TextStyle(
                         color: primaryBlue,
-                        fontWeight:
-                            FontWeight.w600,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
@@ -228,37 +184,33 @@ class HomeScreen extends StatelessWidget {
 
               const SizedBox(height: 8),
 
+              // LAPORAN 1
               _ReportCard(
-                icon:
-                    Icons.backpack_rounded,
+                image: 'assets/tas hitam.png',
                 title: 'Tas Hitam',
-                location:
-                    'Gedung FKIP',
-                time:
-                    '2 jam yang lalu',
+                location: 'Gedung FKIP',
+                time: '2 jam yang lalu',
                 status: 'Hilang',
               ),
 
               const SizedBox(height: 12),
 
+              // LAPORAN 2
               _ReportCard(
-                icon: Icons.key_rounded,
+                image: 'assets/kunci motor.png',
                 title: 'Kunci Motor',
-                location:
-                    'Area Kampus',
-                time:
-                    '5 jam yang lalu',
+                location: 'Area Kampus',
+                time: '5 jam yang lalu',
                 status: 'Ditemukan',
               ),
 
               const SizedBox(height: 12),
 
+              // LAPORAN 3
               _ReportCard(
-                icon:
-                    Icons.account_balance_wallet_rounded,
+                image: 'assets/dompet coklat.png',
                 title: 'Dompet Cokelat',
-                location:
-                    'Perpustakaan',
+                location: 'Perpustakaan',
                 time: 'Kemarin',
                 status: 'Hilang',
               ),
@@ -268,91 +220,52 @@ class HomeScreen extends StatelessWidget {
       ),
 
       // ==================== BOTTOM NAV ====================
-
-      bottomNavigationBar:
-          BottomNavigationBar(
+      bottomNavigationBar: BottomNavigationBar(
         currentIndex: 0,
-
-        type:
-            BottomNavigationBarType.fixed,
-
-        backgroundColor:
-            Colors.white,
-
-        selectedItemColor:
-            primaryBlue,
-
-        unselectedItemColor:
-            textBlue,
-
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Colors.white,
+        selectedItemColor: primaryBlue,
+        unselectedItemColor: textBlue,
         elevation: 10,
 
         onTap: (index) {
           switch (index) {
             case 0:
               break;
-
             case 1:
-              _goTo(
-                context,
-                '/search',
-              );
+              _goTo(context, '/search');
               break;
-
             case 2:
-              _goTo(
-                context,
-                '/add-report',
-              );
+              _goTo(context, '/add-report');
               break;
-
             case 3:
-              _goTo(
-                context,
-                '/notification',
-              );
+              _goTo(context, '/notification');
               break;
-
             case 4:
-              _goTo(
-                context,
-                '/profile',
-              );
+              _goTo(context, '/profile');
               break;
           }
         },
 
         items: const [
           BottomNavigationBarItem(
-            icon:
-                Icon(Icons.home_rounded),
+            icon: Icon(Icons.home_rounded),
             label: 'Beranda',
           ),
-
           BottomNavigationBarItem(
-            icon:
-                Icon(Icons.search_rounded),
+            icon: Icon(Icons.search_rounded),
             label: 'Pencarian',
           ),
-
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.add_circle_outline_rounded,
-            ),
+            icon: Icon(Icons.add_circle_outline_rounded),
             label: 'Tambah',
           ),
-
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.notifications_none_rounded,
-            ),
+            icon: Icon(Icons.notifications_none_rounded),
             label: 'Notifikasi',
           ),
-
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.person_outline_rounded,
-            ),
+            icon: Icon(Icons.person_outline_rounded),
             label: 'Profil',
           ),
         ],
@@ -382,32 +295,22 @@ class _MenuCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-
       child: Container(
-        padding:
-            const EdgeInsets.all(16),
-
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: color,
-          borderRadius:
-              BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(20),
         ),
-
         child: Column(
-          crossAxisAlignment:
-              CrossAxisAlignment.start,
-
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               width: 45,
               height: 45,
-
-              decoration:
-                  const BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.white,
                 shape: BoxShape.circle,
               ),
-
               child: Icon(
                 icon,
                 color: primaryBlue,
@@ -422,8 +325,7 @@ class _MenuCard extends StatelessWidget {
               style: const TextStyle(
                 color: darkBlue,
                 fontSize: 15,
-                fontWeight:
-                    FontWeight.bold,
+                fontWeight: FontWeight.bold,
               ),
             ),
 
@@ -446,14 +348,14 @@ class _MenuCard extends StatelessWidget {
 // ==================== REPORT CARD ====================
 
 class _ReportCard extends StatelessWidget {
-  final IconData icon;
+  final String image;
   final String title;
   final String location;
   final String time;
   final String status;
 
   const _ReportCard({
-    required this.icon,
+    required this.image,
     required this.title,
     required this.location,
     required this.time,
@@ -462,59 +364,57 @@ class _ReportCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isLost =
-        status == 'Hilang';
+    final bool isLost = status == 'Hilang';
 
     return Container(
-      padding:
-          const EdgeInsets.all(15),
-
+      padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius:
-            BorderRadius.circular(18),
-
+        borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color:
-              const Color(0xFFE0EAF5),
+          color: const Color(0xFFE0EAF5),
         ),
       ),
 
       child: Row(
         children: [
-          Container(
-            width: 52,
-            height: 52,
-
-            decoration: BoxDecoration(
-              color: lightBlue,
-              borderRadius:
-                  BorderRadius.circular(15),
-            ),
-
-            child: Icon(
-              icon,
-              color: primaryBlue,
-              size: 27,
+          // GAMBAR BARANG
+          ClipRRect(
+            borderRadius: BorderRadius.circular(15),
+            child: Image.asset(
+              image,
+              width: 65,
+              height: 65,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  width: 65,
+                  height: 65,
+                  color: lightBlue,
+                  alignment: Alignment.center,
+                  child: const Icon(
+                    Icons.image_not_supported_outlined,
+                    color: primaryBlue,
+                    size: 25,
+                  ),
+                );
+              },
             ),
           ),
 
           const SizedBox(width: 14),
 
+          // INFORMASI BARANG
           Expanded(
             child: Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment.start,
-
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
-                  style:
-                      const TextStyle(
+                  style: const TextStyle(
                     color: darkBlue,
                     fontSize: 15,
-                    fontWeight:
-                        FontWeight.bold,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
 
@@ -522,8 +422,7 @@ class _ReportCard extends StatelessWidget {
 
                 Text(
                   location,
-                  style:
-                      const TextStyle(
+                  style: const TextStyle(
                     color: textBlue,
                     fontSize: 12,
                   ),
@@ -533,8 +432,7 @@ class _ReportCard extends StatelessWidget {
 
                 Text(
                   time,
-                  style:
-                      const TextStyle(
+                  style: const TextStyle(
                     color: textBlue,
                     fontSize: 11,
                   ),
@@ -543,37 +441,26 @@ class _ReportCard extends StatelessWidget {
             ),
           ),
 
+          const SizedBox(width: 8),
+
+          // STATUS LAPORAN
           Container(
-            padding:
-                const EdgeInsets.symmetric(
+            padding: const EdgeInsets.symmetric(
               horizontal: 10,
               vertical: 6,
             ),
-
             decoration: BoxDecoration(
               color: isLost
-                  ? const Color(
-                      0xFFFFF1F1,
-                    )
-                  : const Color(
-                      0xFFEFFAF2,
-                    ),
-
-              borderRadius:
-                  BorderRadius.circular(
-                10,
-              ),
+                  ? const Color(0xFFFFF1F1)
+                  : const Color(0xFFEFFAF2),
+              borderRadius: BorderRadius.circular(10),
             ),
-
             child: Text(
               status,
               style: TextStyle(
                 fontSize: 11,
-                fontWeight:
-                    FontWeight.bold,
-                color: isLost
-                    ? Colors.red
-                    : Colors.green,
+                fontWeight: FontWeight.bold,
+                color: isLost ? Colors.red : Colors.green,
               ),
             ),
           ),

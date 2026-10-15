@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -7,12 +8,10 @@ class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
   @override
-  State<ProfileScreen> createState() =>
-      _ProfileScreenState();
+  State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState
-    extends State<ProfileScreen> {
+class _ProfileScreenState extends State<ProfileScreen> {
   String _name = 'Pengguna';
   String _email = '-';
 
@@ -23,30 +22,20 @@ class _ProfileScreenState
   }
 
   Future<void> _loadProfile() async {
-    final prefs =
-        await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance();
 
     if (!mounted) return;
 
     setState(() {
-      _name =
-          prefs.getString('user_name') ??
-              'Pengguna';
-
-      _email =
-          prefs.getString('user_email') ??
-              '-';
+      _name = prefs.getString('user_name') ?? 'Pengguna';
+      _email = prefs.getString('user_email') ?? '-';
     });
   }
 
   Future<void> _logout() async {
-    final prefs =
-        await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance();
 
-    await prefs.setBool(
-      'is_logged_in',
-      false,
-    );
+    await prefs.setBool('is_logged_in', false);
 
     if (!mounted) return;
 
@@ -58,8 +47,7 @@ class _ProfileScreenState
   }
 
   void _showMessage(String message) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
       ),
@@ -74,7 +62,6 @@ class _ProfileScreenState
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-
         title: const Text(
           'Profil',
           style: TextStyle(
@@ -83,12 +70,10 @@ class _ProfileScreenState
             fontWeight: FontWeight.bold,
           ),
         ),
-
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
           },
-
           icon: const Icon(
             Icons.arrow_back_ios_new,
             color: darkBlue,
@@ -99,22 +84,17 @@ class _ProfileScreenState
 
       body: SafeArea(
         child: SingleChildScrollView(
-          padding:
-              const EdgeInsets.all(24),
-
+          padding: const EdgeInsets.all(24),
           child: Column(
             children: [
               // FOTO PROFIL
               Container(
                 width: 90,
                 height: 90,
-
-                decoration:
-                    const BoxDecoration(
+                decoration: const BoxDecoration(
                   color: lightBlue,
                   shape: BoxShape.circle,
                 ),
-
                 child: const Icon(
                   Icons.person_rounded,
                   size: 50,
@@ -124,18 +104,19 @@ class _ProfileScreenState
 
               const SizedBox(height: 15),
 
+              // NAMA PENGGUNA
               Text(
                 _name,
                 style: const TextStyle(
                   color: darkBlue,
                   fontSize: 21,
-                  fontWeight:
-                      FontWeight.bold,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
 
               const SizedBox(height: 5),
 
+              // EMAIL PENGGUNA
               Text(
                 _email,
                 style: const TextStyle(
@@ -146,49 +127,45 @@ class _ProfileScreenState
 
               const SizedBox(height: 30),
 
-              // MENU
+              // MENU BANTUAN
               _profileMenu(
-                icon:
-                    Icons.history_rounded,
-                title: 'Riwayat Laporan',
-                onTap: () {
-                  _showMessage(
-                    'Halaman riwayat akan dibuat selanjutnya.',
-                  );
-                },
-              ),
-
-              const SizedBox(height: 12),
-
-              _profileMenu(
-                icon:
-                    Icons.settings_outlined,
-                title: 'Pengaturan',
-                onTap: () {
-                  _showMessage(
-                    'Halaman pengaturan akan dibuat selanjutnya.',
-                  );
-                },
-              ),
-
-              const SizedBox(height: 12),
-
-              _profileMenu(
-                icon:
-                    Icons.help_outline_rounded,
+                icon: Icons.help_outline_rounded,
                 title: 'Bantuan',
                 onTap: () {
-                  _showMessage(
-                    'Halaman bantuan akan dibuat selanjutnya.',
+                  Navigator.pushNamed(context, '/help');
+                },
+              ),
+
+              const SizedBox(height: 12),
+
+              // MENU PENGATURAN
+              _profileMenu(
+                icon: Icons.settings_outlined,
+                title: 'Pengaturan',
+                onTap: () {
+                  Navigator.pushNamed(context, '/settings');
+                },
+              ),
+
+              const SizedBox(height: 12),
+
+              // MENU RIWAYAT LAPORAN
+              _profileMenu(
+                icon: Icons.history_rounded,
+                title: 'Riwayat Laporan',
+                onTap: () {
+                  Navigator.pushNamed(
+                    context,
+                    '/report-history',
                   );
                 },
               ),
 
               const SizedBox(height: 12),
 
+              // MENU KELUAR
               _profileMenu(
-                icon:
-                    Icons.logout_rounded,
+                icon: Icons.logout_rounded,
                 title: 'Keluar',
                 iconColor: Colors.red,
                 titleColor: Colors.red,
@@ -201,22 +178,13 @@ class _ProfileScreenState
         ),
       ),
 
-      bottomNavigationBar:
-          BottomNavigationBar(
+      // NAVIGASI BAWAH
+      bottomNavigationBar: BottomNavigationBar(
         currentIndex: 4,
-
-        type:
-            BottomNavigationBarType.fixed,
-
-        backgroundColor:
-            Colors.white,
-
-        selectedItemColor:
-            primaryBlue,
-
-        unselectedItemColor:
-            textBlue,
-
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Colors.white,
+        selectedItemColor: primaryBlue,
+        unselectedItemColor: textBlue,
         elevation: 10,
 
         onTap: (index) {
@@ -250,41 +218,30 @@ class _ProfileScreenState
               break;
 
             case 4:
+              // Tetap di halaman Profil.
               break;
           }
         },
 
         items: const [
           BottomNavigationBarItem(
-            icon:
-                Icon(Icons.home_rounded),
+            icon: Icon(Icons.home_rounded),
             label: 'Beranda',
           ),
-
           BottomNavigationBarItem(
-            icon:
-                Icon(Icons.search_rounded),
+            icon: Icon(Icons.search_rounded),
             label: 'Pencarian',
           ),
-
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.add_circle_outline_rounded,
-            ),
+            icon: Icon(Icons.add_circle_outline_rounded),
             label: 'Tambah',
           ),
-
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.notifications_none_rounded,
-            ),
+            icon: Icon(Icons.notifications_none_rounded),
             label: 'Notifikasi',
           ),
-
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.person_rounded,
-            ),
+            icon: Icon(Icons.person_rounded),
             label: 'Profil',
           ),
         ],
@@ -292,8 +249,7 @@ class _ProfileScreenState
     );
   }
 
-  // ==================== PROFILE MENU ====================
-
+  // WIDGET MENU PROFIL
   Widget _profileMenu({
     required IconData icon,
     required String title,
@@ -303,29 +259,19 @@ class _ProfileScreenState
   }) {
     return InkWell(
       onTap: onTap,
-
-      borderRadius:
-          BorderRadius.circular(17),
-
+      borderRadius: BorderRadius.circular(17),
       child: Container(
-        padding:
-            const EdgeInsets.symmetric(
+        padding: const EdgeInsets.symmetric(
           horizontal: 17,
           vertical: 17,
         ),
-
         decoration: BoxDecoration(
           color: Colors.white,
-
-          borderRadius:
-              BorderRadius.circular(17),
-
+          borderRadius: BorderRadius.circular(17),
           border: Border.all(
-            color:
-                const Color(0xFFE0EAF5),
+            color: const Color(0xFFE0EAF5),
           ),
         ),
-
         child: Row(
           children: [
             Icon(
@@ -341,15 +287,13 @@ class _ProfileScreenState
                 style: TextStyle(
                   color: titleColor,
                   fontSize: 14,
-                  fontWeight:
-                      FontWeight.w600,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
 
             const Icon(
-              Icons
-                  .arrow_forward_ios_rounded,
+              Icons.arrow_forward_ios_rounded,
               size: 15,
               color: textBlue,
             ),
@@ -359,31 +303,22 @@ class _ProfileScreenState
     );
   }
 
-  // ==================== LOGOUT DIALOG ====================
-
+  // DIALOG KONFIRMASI KELUAR
   void _showLogoutDialog() {
     showDialog(
       context: context,
-
       builder: (context) {
         return AlertDialog(
-          title: const Text(
-            'Keluar',
-          ),
-
+          title: const Text('Keluar'),
           content: const Text(
             'Apakah kamu yakin ingin keluar dari akun?',
           ),
-
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-
-              child: const Text(
-                'Batal',
-              ),
+              child: const Text('Batal'),
             ),
 
             ElevatedButton(
@@ -391,18 +326,11 @@ class _ProfileScreenState
                 Navigator.pop(context);
                 _logout();
               },
-
-              style:
-                  ElevatedButton.styleFrom(
-                backgroundColor:
-                    Colors.red,
-                foregroundColor:
-                    Colors.white,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
               ),
-
-              child: const Text(
-                'Keluar',
-              ),
+              child: const Text('Keluar'),
             ),
           ],
         );

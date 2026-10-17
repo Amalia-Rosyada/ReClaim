@@ -1,7 +1,9 @@
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'splash_screen.dart';
+import 'auth_background.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -15,7 +17,6 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isLoggingIn = false;
 
   final TextEditingController _emailController = TextEditingController();
-
   final TextEditingController _passwordController = TextEditingController();
 
   @override
@@ -35,7 +36,6 @@ class _LoginScreenState extends State<LoginScreen> {
     final email = _emailController.text.trim();
     final password = _passwordController.text;
 
-    // Cek input kosong
     if (email.isEmpty || password.isEmpty) {
       _showMessage('Email dan password harus diisi.');
       return;
@@ -50,7 +50,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
       final hasAccount = prefs.getBool('has_account') ?? false;
 
-      // Belum ada akun
       if (!hasAccount) {
         if (!mounted) return;
 
@@ -63,10 +62,8 @@ class _LoginScreenState extends State<LoginScreen> {
       }
 
       final savedEmail = prefs.getString('user_email') ?? '';
-
       final savedPassword = prefs.getString('user_password') ?? '';
 
-      // Cek email dan password
       if (email != savedEmail || password != savedPassword) {
         if (!mounted) return;
 
@@ -78,7 +75,6 @@ class _LoginScreenState extends State<LoginScreen> {
         return;
       }
 
-      // Login berhasil
       await prefs.setBool('is_logged_in', true);
 
       if (!mounted) return;
@@ -89,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (!mounted) return;
 
-      Navigator.pushReplacementNamed(context, '/home');
+      Navigator.pushReplacementNamed(context, '/location');
     } catch (e) {
       if (!mounted) return;
 
@@ -107,7 +103,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _showMessage(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), behavior: SnackBarBehavior.floating),
+      SnackBar(
+        content: Text(message),
+        behavior: SnackBarBehavior.floating,
+      ),
     );
   }
 
@@ -119,142 +118,142 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(28, 35, 28, 25),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // ==================================================
-              // LOGO
-              // ==================================================
+      body: AuthBackground(
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(28, 35, 28, 25),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // LOGO
+                Center(
+                  child: Image.asset(
+                    'assets/logo.png',
+                    width: 75,
+                    height: 75,
+                    fit: BoxFit.contain,
+                  ),
+                ),
 
-              const Center(child: ReClaimLogo(size: 75)),
+                const SizedBox(height: 12),
 
-              const SizedBox(height: 12),
+                const Center(
+                  child: Text(
+                    'ReClaim',
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: darkBlue,
+                    ),
+                  ),
+                ),
 
-              const Center(
-                child: Text(
-                  'ReClaim',
+                const SizedBox(height: 45),
+
+                // JUDUL
+                const Text(
+                  'Selamat Datang!',
                   style: TextStyle(
-                    fontSize: 30,
+                    fontSize: 29,
                     fontWeight: FontWeight.bold,
                     color: darkBlue,
                   ),
                 ),
-              ),
 
-              const SizedBox(height: 45),
+                const SizedBox(height: 8),
 
-              // ==================================================
-              // JUDUL
-              // ==================================================
-              const Text(
-                'Selamat Datang!',
-                style: TextStyle(
-                  fontSize: 29,
-                  fontWeight: FontWeight.bold,
-                  color: darkBlue,
+                const Text(
+                  'Masuk untuk melanjutkan ke akun Anda.',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: textBlue,
+                  ),
                 ),
-              ),
 
-              const SizedBox(height: 8),
+                const SizedBox(height: 30),
 
-              const Text(
-                'Masuk untuk melanjutkan ke akun Anda.',
-                style: TextStyle(fontSize: 16, color: textBlue),
-              ),
+                // EMAIL
+                _emailInputField(),
 
-              const SizedBox(height: 30),
+                const SizedBox(height: 16),
 
-              // ==================================================
-              // EMAIL
-              // ==================================================
-              _emailInputField(),
+                // PASSWORD
+                _passwordInputField(),
 
-              const SizedBox(height: 16),
+                const SizedBox(height: 12),
 
-              // ==================================================
-              // PASSWORD
-              // ==================================================
-              _passwordInputField(),
-
-              const SizedBox(height: 12),
-
-              // ==================================================
-              // LUPA PASSWORD
-              // ==================================================
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () {
-                    _showMessage('Fitur lupa password belum tersedia.');
-                  },
-                  child: const Text(
-                    'Lupa password?',
-                    style: TextStyle(
-                      color: primaryBlue,
-                      fontWeight: FontWeight.w600,
+                // LUPA PASSWORD
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: () {
+                      _showMessage(
+                        'Fitur lupa password belum tersedia.',
+                      );
+                    },
+                    child: const Text(
+                      'Lupa password?',
+                      style: TextStyle(
+                        color: primaryBlue,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),
-              ),
 
-              const SizedBox(height: 10),
+                const SizedBox(height: 10),
 
-              // ==================================================
-              // TOMBOL MASUK
-              // ==================================================
-              _mainButton(
-                title: _isLoggingIn ? 'Memeriksa...' : 'Masuk',
-                onPressed: _isLoggingIn ? null : _login,
-              ),
+                // TOMBOL MASUK
+                _mainButton(
+                  title: _isLoggingIn ? 'Memeriksa...' : 'Masuk',
+                  onPressed: _isLoggingIn ? null : _login,
+                ),
 
-              const SizedBox(height: 25),
+                const SizedBox(height: 25),
 
-              // ==================================================
-              // ATAU
-              // ==================================================
-              _orDivider(),
+                // PEMISAH
+                _orDivider(),
 
-              const SizedBox(height: 20),
+                const SizedBox(height: 20),
 
-              // ==================================================
-              // GOOGLE
-              // ==================================================
-              _googleButton(title: 'Masuk dengan Google'),
+                // GOOGLE
+                _googleButton(
+                  title: 'Masuk dengan Google',
+                ),
 
-              const SizedBox(height: 30),
+                const SizedBox(height: 30),
 
-              // ==================================================
-              // DAFTAR
-              // ==================================================
-              Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Belum punya akun? ',
-                      style: TextStyle(color: textBlue),
-                    ),
-                    GestureDetector(
-                      onTap: _isLoggingIn
-                          ? null
-                          : () {
-                              Navigator.pushNamed(context, '/register');
-                            },
-                      child: const Text(
-                        'Daftar',
-                        style: TextStyle(
-                          color: primaryBlue,
-                          fontWeight: FontWeight.bold,
+                // DAFTAR
+                Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Belum punya akun? ',
+                        style: TextStyle(color: textBlue),
+                      ),
+                      GestureDetector(
+                        onTap: _isLoggingIn
+                            ? null
+                            : () {
+                                Navigator.pushNamed(
+                                  context,
+                                  '/register',
+                                );
+                              },
+                        child: const Text(
+                          'Daftar',
+                          style: TextStyle(
+                            color: primaryBlue,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -263,7 +262,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   // ============================================================
   // EMAIL FIELD
-  // TIDAK ADA IKON MATA
   // ============================================================
 
   Widget _emailInputField() {
@@ -273,31 +271,34 @@ class _LoginScreenState extends State<LoginScreen> {
       decoration: InputDecoration(
         hintText: 'Email',
         hintStyle: const TextStyle(color: textBlue),
-
-        prefixIcon: const Icon(Icons.email_outlined, color: darkBlue),
-
-        // TIDAK ADA suffixIcon
+        prefixIcon: const Icon(
+          Icons.email_outlined,
+          color: darkBlue,
+        ),
         filled: true,
         fillColor: Colors.white,
-
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 18,
           vertical: 18,
         ),
-
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
-          borderSide: const BorderSide(color: Color(0xFFD8E5F3)),
+          borderSide: const BorderSide(
+            color: Color(0xFFD8E5F3),
+          ),
         ),
-
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
-          borderSide: const BorderSide(color: Color(0xFFD8E5F3)),
+          borderSide: const BorderSide(
+            color: Color(0xFFD8E5F3),
+          ),
         ),
-
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
-          borderSide: const BorderSide(color: primaryBlue, width: 1.5),
+          borderSide: const BorderSide(
+            color: primaryBlue,
+            width: 1.5,
+          ),
         ),
       ),
     );
@@ -305,7 +306,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   // ============================================================
   // PASSWORD FIELD
-  // IKON MATA SELALU ADA
   // ============================================================
 
   Widget _passwordInputField() {
@@ -315,10 +315,10 @@ class _LoginScreenState extends State<LoginScreen> {
       decoration: InputDecoration(
         hintText: 'Password',
         hintStyle: const TextStyle(color: textBlue),
-
-        prefixIcon: const Icon(Icons.lock_outline, color: darkBlue),
-
-        // IKON MATA SELALU ADA
+        prefixIcon: const Icon(
+          Icons.lock_outline,
+          color: darkBlue,
+        ),
         suffixIcon: IconButton(
           onPressed: () {
             setState(() {
@@ -332,28 +332,30 @@ class _LoginScreenState extends State<LoginScreen> {
             color: darkBlue,
           ),
         ),
-
         filled: true,
         fillColor: Colors.white,
-
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 18,
           vertical: 18,
         ),
-
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
-          borderSide: const BorderSide(color: Color(0xFFD8E5F3)),
+          borderSide: const BorderSide(
+            color: Color(0xFFD8E5F3),
+          ),
         ),
-
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
-          borderSide: const BorderSide(color: Color(0xFFD8E5F3)),
+          borderSide: const BorderSide(
+            color: Color(0xFFD8E5F3),
+          ),
         ),
-
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
-          borderSide: const BorderSide(color: primaryBlue, width: 1.5),
+          borderSide: const BorderSide(
+            color: primaryBlue,
+            width: 1.5,
+          ),
         ),
       ),
     );
@@ -375,7 +377,9 @@ class _LoginScreenState extends State<LoginScreen> {
         style: ElevatedButton.styleFrom(
           backgroundColor: primaryBlue,
           foregroundColor: Colors.white,
-          disabledBackgroundColor: primaryBlue.withValues(alpha: 0.6),
+          disabledBackgroundColor: primaryBlue.withValues(
+            alpha: 0.6,
+          ),
           disabledForegroundColor: Colors.white,
           elevation: 0,
           shape: RoundedRectangleBorder(
@@ -384,7 +388,10 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         child: Text(
           title,
-          style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            fontSize: 17,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );
@@ -404,7 +411,9 @@ class _LoginScreenState extends State<LoginScreen> {
         },
         style: OutlinedButton.styleFrom(
           foregroundColor: darkBlue,
-          side: const BorderSide(color: Color(0xFFD8E5F3)),
+          side: const BorderSide(
+            color: Color(0xFFD8E5F3),
+          ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(18),
           ),
@@ -425,12 +434,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ),
-
             const SizedBox(width: 10),
-
             Text(
               title,
-              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+              style: const TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ],
         ),
@@ -445,14 +455,23 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _orDivider() {
     return Row(
       children: [
-        const Expanded(child: Divider(color: Color(0xFFD8E5F3))),
-
+        const Expanded(
+          child: Divider(
+            color: Color(0xFFD8E5F3),
+          ),
+        ),
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 15),
-          child: Text('atau', style: TextStyle(color: textBlue)),
+          child: Text(
+            'atau',
+            style: TextStyle(color: textBlue),
+          ),
         ),
-
-        const Expanded(child: Divider(color: Color(0xFFD8E5F3))),
+        const Expanded(
+          child: Divider(
+            color: Color(0xFFD8E5F3),
+          ),
+        ),
       ],
     );
   }

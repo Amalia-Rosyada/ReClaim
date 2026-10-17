@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -21,6 +20,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _loadProfile();
   }
 
+  // ============================================================
+  // MEMUAT DATA PROFIL
+  // ============================================================
+
   Future<void> _loadProfile() async {
     final prefs = await SharedPreferences.getInstance();
 
@@ -31,6 +34,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       _email = prefs.getString('user_email') ?? '-';
     });
   }
+
+  // ============================================================
+  // LOGOUT
+  // ============================================================
 
   Future<void> _logout() async {
     final prefs = await SharedPreferences.getInstance();
@@ -46,22 +53,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  void _showMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-      ),
-    );
-  }
+  // ============================================================
+  // BUILD
+  // ============================================================
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
 
+      // APP BAR TANPA TOMBOL KEMBALI
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
         elevation: 0,
+        centerTitle: false,
         title: const Text(
           'Profil',
           style: TextStyle(
@@ -70,17 +76,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios_new,
-            color: darkBlue,
-            size: 20,
-          ),
-        ),
       ),
+
+      // ========================================================
+      // KONTEN PROFIL
+      // ========================================================
 
       body: SafeArea(
         child: SingleChildScrollView(
@@ -169,16 +169,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 title: 'Keluar',
                 iconColor: Colors.red,
                 titleColor: Colors.red,
-                onTap: () {
-                  _showLogoutDialog();
-                },
+                onTap: _showLogoutDialog,
               ),
             ],
           ),
         ),
       ),
 
+      // ========================================================
       // NAVIGASI BAWAH
+      // ========================================================
+
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 4,
         type: BottomNavigationBarType.fixed,
@@ -249,7 +250,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  // ============================================================
   // WIDGET MENU PROFIL
+  // ============================================================
+
   Widget _profileMenu({
     required IconData icon,
     required String title,
@@ -303,11 +307,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  // ============================================================
   // DIALOG KONFIRMASI KELUAR
+  // ============================================================
+
   void _showLogoutDialog() {
     showDialog(
       context: context,
-      builder: (context) {
+      builder: (dialogContext) {
         return AlertDialog(
           title: const Text('Keluar'),
           content: const Text(
@@ -316,15 +323,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.pop(dialogContext);
               },
               child: const Text('Batal'),
             ),
 
             ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-                _logout();
+              onPressed: () async {
+                Navigator.pop(dialogContext);
+                await _logout();
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'splash_screen.dart';
+import 'auth_background.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -30,7 +31,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.dispose();
   }
 
-  // ==================== DAFTAR ====================
+  // ============================================================
+  // DAFTAR AKUN
+  // ============================================================
 
   Future<void> _register() async {
     if (_isRegistering) return;
@@ -48,9 +51,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       return;
     }
 
-    if (!RegExp(
-      r'^[\w\.-]+@[\w\.-]+\.\w+$',
-    ).hasMatch(email)) {
+    if (!RegExp(r'^[\w\.-]+@[\w\.-]+\.\w+$').hasMatch(email)) {
       _showMessage('Format email tidak valid.');
       return;
     }
@@ -97,170 +98,192 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
+  // ============================================================
+  // PESAN
+  // ============================================================
+
   void _showMessage(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        behavior: SnackBarBehavior.floating,
-      ),
+      SnackBar(content: Text(message), behavior: SnackBarBehavior.floating),
     );
   }
 
-  // ==================== BUILD ====================
+  // ============================================================
+  // BUILD
+  // ============================================================
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(28, 25, 28, 25),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // ==================== KEMBALI ====================
-
-              IconButton(
-                onPressed: _isRegistering
-                    ? null
-                    : () {
-                        Navigator.pop(context);
-                      },
-                icon: const Icon(
-                  Icons.arrow_back_ios_new,
-                  color: darkBlue,
+      body: AuthBackground(
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(28, 18, 28, 25),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // TOMBOL KEMBALI
+                IconButton(
+                  onPressed: _isRegistering
+                      ? null
+                      : () {
+                          Navigator.pop(context);
+                        },
+                  icon: const Icon(Icons.arrow_back_ios_new, color: darkBlue),
                 ),
-              ),
 
-              const SizedBox(height: 20),
+                const SizedBox(height: 8),
 
-              const Text(
-                'Daftar Akun',
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  color: darkBlue,
+                // LOGO
+                Center(
+                  child: Image.asset(
+                    'assets/logo.png',
+                    width: 68,
+                    height: 68,
+                    fit: BoxFit.contain,
+                  ),
                 ),
-              ),
 
-              const SizedBox(height: 8),
+                const SizedBox(height: 8),
 
-              const Text(
-                'Buat akun baru untuk mulai\nmenggunakan ReClaim.',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: textBlue,
-                  height: 1.5,
-                ),
-              ),
-
-              const SizedBox(height: 30),
-
-              // ==================== NAMA ====================
-
-              _registerInputField(
-                controller: _nameController,
-                icon: Icons.person_outline,
-                hint: 'Nama Lengkap',
-              ),
-
-              const SizedBox(height: 16),
-
-              // ==================== EMAIL ====================
-
-              _registerInputField(
-                controller: _emailController,
-                icon: Icons.email_outlined,
-                hint: 'Email',
-                keyboardType: TextInputType.emailAddress,
-              ),
-
-              const SizedBox(height: 16),
-
-              // ==================== PASSWORD ====================
-
-              _registerInputField(
-                controller: _passwordController,
-                icon: Icons.lock_outline,
-                hint: 'Password',
-                obscure: _obscurePassword,
-                onVisibilityPressed: () {
-                  setState(() {
-                    _obscurePassword = !_obscurePassword;
-                  });
-                },
-              ),
-
-              const SizedBox(height: 16),
-
-              // ==================== KONFIRMASI PASSWORD ====================
-
-              _registerInputField(
-                controller: _confirmPasswordController,
-                icon: Icons.lock_outline,
-                hint: 'Konfirmasi Password',
-                obscure: _obscureConfirmPassword,
-                onVisibilityPressed: () {
-                  setState(() {
-                    _obscureConfirmPassword = !_obscureConfirmPassword;
-                  });
-                },
-              ),
-
-              const SizedBox(height: 25),
-
-              // ==================== DAFTAR ====================
-
-              _registerMainButton(
-                title: _isRegistering ? 'Menyimpan...' : 'Daftar',
-                onPressed: _isRegistering ? null : _register,
-              ),
-
-              const SizedBox(height: 25),
-
-              _registerOrDivider(),
-
-              const SizedBox(height: 20),
-
-              _registerGoogleButton(
-                title: 'Daftar dengan Google',
-              ),
-
-              const SizedBox(height: 30),
-
-              // ==================== LOGIN ====================
-
-              Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Sudah punya akun? ',
-                      style: TextStyle(
-                        color: textBlue,
-                      ),
+                // NAMA APLIKASI
+                const Center(
+                  child: Text(
+                    'ReClaim',
+                    style: TextStyle(
+                      fontSize: 27,
+                      fontWeight: FontWeight.bold,
+                      color: darkBlue,
                     ),
-                    GestureDetector(
-                      onTap: _isRegistering
-                          ? null
-                          : () {
-                              Navigator.pushReplacementNamed(
-                                context,
-                                '/login',
-                              );
-                            },
-                      child: const Text(
-                        'Masuk',
-                        style: TextStyle(
-                          color: primaryBlue,
-                          fontWeight: FontWeight.bold,
+                  ),
+                ),
+
+                const SizedBox(height: 25),
+
+                // JUDUL
+                const Text(
+                  'Daftar Akun',
+                  style: TextStyle(
+                    fontSize: 29,
+                    fontWeight: FontWeight.bold,
+                    color: darkBlue,
+                  ),
+                ),
+
+                const SizedBox(height: 8),
+
+                const Text(
+                  'Buat akun baru untuk mulai menggunakan ReClaim.',
+                  style: TextStyle(fontSize: 15, color: textBlue, height: 1.5),
+                ),
+
+                const SizedBox(height: 25),
+
+                // NAMA LENGKAP
+                _registerInputField(
+                  controller: _nameController,
+                  icon: Icons.person_outline,
+                  hint: 'Nama Lengkap',
+                  textCapitalization: TextCapitalization.words,
+                ),
+
+                const SizedBox(height: 15),
+
+                // EMAIL
+                _registerInputField(
+                  controller: _emailController,
+                  icon: Icons.email_outlined,
+                  hint: 'Email',
+                  keyboardType: TextInputType.emailAddress,
+                ),
+
+                const SizedBox(height: 15),
+
+                // PASSWORD
+                _registerInputField(
+                  controller: _passwordController,
+                  icon: Icons.lock_outline,
+                  hint: 'Password',
+                  obscure: _obscurePassword,
+                  onVisibilityPressed: () {
+                    setState(() {
+                      _obscurePassword = !_obscurePassword;
+                    });
+                  },
+                ),
+
+                const SizedBox(height: 15),
+
+                // KONFIRMASI PASSWORD
+                _registerInputField(
+                  controller: _confirmPasswordController,
+                  icon: Icons.lock_outline,
+                  hint: 'Konfirmasi Password',
+                  obscure: _obscureConfirmPassword,
+                  onVisibilityPressed: () {
+                    setState(() {
+                      _obscureConfirmPassword = !_obscureConfirmPassword;
+                    });
+                  },
+                ),
+
+                const SizedBox(height: 24),
+
+                // TOMBOL DAFTAR
+                _registerMainButton(
+                  title: _isRegistering ? 'Menyimpan...' : 'Daftar',
+                  onPressed: _isRegistering ? null : _register,
+                ),
+
+                const SizedBox(height: 24),
+
+                // PEMISAH
+                _registerOrDivider(),
+
+                const SizedBox(height: 18),
+
+                // GOOGLE
+                _registerGoogleButton(
+                  title: 'Daftar dengan Google',
+                  onPressed: () {
+                    _showMessage('Pendaftaran dengan Google belum tersedia.');
+                  },
+                ),
+
+                const SizedBox(height: 25),
+
+                // NAVIGASI KE LOGIN
+                Center(
+                  child: Wrap(
+                    alignment: WrapAlignment.center,
+                    children: [
+                      const Text(
+                        'Sudah punya akun? ',
+                        style: TextStyle(color: textBlue),
+                      ),
+                      GestureDetector(
+                        onTap: _isRegistering
+                            ? null
+                            : () {
+                                Navigator.pushReplacementNamed(
+                                  context,
+                                  '/login',
+                                );
+                              },
+                        child: const Text(
+                          'Masuk',
+                          style: TextStyle(
+                            color: primaryBlue,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -268,7 +291,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 }
 
-// ==================== INPUT ====================
+// ============================================================
+// INPUT FIELD
+// ============================================================
 
 Widget _registerInputField({
   required TextEditingController controller,
@@ -277,22 +302,17 @@ Widget _registerInputField({
   bool obscure = false,
   VoidCallback? onVisibilityPressed,
   TextInputType? keyboardType,
+  TextCapitalization textCapitalization = TextCapitalization.none,
 }) {
   return TextField(
     controller: controller,
     obscureText: obscure,
     keyboardType: keyboardType,
+    textCapitalization: textCapitalization,
     decoration: InputDecoration(
       hintText: hint,
-      hintStyle: const TextStyle(
-        color: textBlue,
-      ),
-      prefixIcon: Icon(
-        icon,
-        color: darkBlue,
-      ),
-
-      // Mata hanya muncul jika onVisibilityPressed tersedia
+      hintStyle: const TextStyle(color: textBlue, fontSize: 14),
+      prefixIcon: Icon(icon, color: darkBlue, size: 21),
       suffixIcon: onVisibilityPressed != null
           ? IconButton(
               onPressed: onVisibilityPressed,
@@ -301,40 +321,32 @@ Widget _registerInputField({
                     ? Icons.visibility_outlined
                     : Icons.visibility_off_outlined,
                 color: darkBlue,
+                size: 21,
               ),
             )
           : null,
-
       filled: true,
-      fillColor: Colors.white,
-      contentPadding: const EdgeInsets.symmetric(
-        horizontal: 18,
-        vertical: 18,
-      ),
+      fillColor: Colors.white.withValues(alpha: 0.96),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 17),
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(18),
-        borderSide: const BorderSide(
-          color: Color(0xFFD8E5F3),
-        ),
+        borderRadius: BorderRadius.circular(16),
+        borderSide: const BorderSide(color: Color(0xFFD8E5F3)),
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(18),
-        borderSide: const BorderSide(
-          color: Color(0xFFD8E5F3),
-        ),
+        borderRadius: BorderRadius.circular(16),
+        borderSide: const BorderSide(color: Color(0xFFD8E5F3)),
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(18),
-        borderSide: const BorderSide(
-          color: primaryBlue,
-          width: 1.5,
-        ),
+        borderRadius: BorderRadius.circular(16),
+        borderSide: const BorderSide(color: primaryBlue, width: 1.5),
       ),
     ),
   );
 }
 
-// ==================== TOMBOL DAFTAR ====================
+// ============================================================
+// TOMBOL DAFTAR
+// ============================================================
 
 Widget _registerMainButton({
   required String title,
@@ -342,7 +354,7 @@ Widget _registerMainButton({
 }) {
   return SizedBox(
     width: double.infinity,
-    height: 56,
+    height: 54,
     child: ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
@@ -351,39 +363,34 @@ Widget _registerMainButton({
         disabledBackgroundColor: primaryBlue.withValues(alpha: 0.6),
         disabledForegroundColor: Colors.white,
         elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(18),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
       child: Text(
         title,
-        style: const TextStyle(
-          fontSize: 17,
-          fontWeight: FontWeight.bold,
-        ),
+        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       ),
     ),
   );
 }
 
-// ==================== GOOGLE ====================
+// ============================================================
+// TOMBOL GOOGLE
+// ============================================================
 
 Widget _registerGoogleButton({
   required String title,
+  required VoidCallback onPressed,
 }) {
   return SizedBox(
     width: double.infinity,
-    height: 55,
+    height: 53,
     child: OutlinedButton(
-      onPressed: () {},
+      onPressed: onPressed,
       style: OutlinedButton.styleFrom(
         foregroundColor: darkBlue,
-        side: const BorderSide(
-          color: Color(0xFFD8E5F3),
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(18),
-        ),
+        backgroundColor: Colors.white.withValues(alpha: 0.92),
+        side: const BorderSide(color: Color(0xFFD8E5F3)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -399,10 +406,7 @@ Widget _registerGoogleButton({
           const SizedBox(width: 10),
           Text(
             title,
-            style: const TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
-            ),
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
           ),
         ],
       ),
@@ -410,30 +414,19 @@ Widget _registerGoogleButton({
   );
 }
 
-// ==================== OR ====================
+// ============================================================
+// PEMISAH
+// ============================================================
 
 Widget _registerOrDivider() {
   return Row(
     children: [
-      const Expanded(
-        child: Divider(
-          color: Color(0xFFD8E5F3),
-        ),
-      ),
+      const Expanded(child: Divider(color: Color(0xFFD8E5F3))),
       const Padding(
         padding: EdgeInsets.symmetric(horizontal: 15),
-        child: Text(
-          'atau',
-          style: TextStyle(
-            color: textBlue,
-          ),
-        ),
+        child: Text('atau', style: TextStyle(color: textBlue)),
       ),
-      const Expanded(
-        child: Divider(
-          color: Color(0xFFD8E5F3),
-        ),
-      ),
+      const Expanded(child: Divider(color: Color(0xFFD8E5F3))),
     ],
   );
 }

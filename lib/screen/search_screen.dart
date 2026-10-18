@@ -1,5 +1,7 @@
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'splash_screen.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -14,9 +16,10 @@ class _SearchScreenState extends State<SearchScreen> {
       TextEditingController();
 
   String _selectedFilter = 'Semua';
+  List<Map<String, dynamic>> _userReports = [];
 
-  // DATA BARANG SEMENTARA
-  final List<Map<String, String>> _items = [
+  // DATA BARANG CONTOH
+  final List<Map<String, dynamic>> _sampleItems = [
     {
       'name': 'Tas Hitam',
       'location': 'Gedung FKIP',
@@ -57,6 +60,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void initState() {
     super.initState();
+    _loadUserReports();
 
     _searchController.addListener(() {
       if (mounted) {
@@ -65,6 +69,54 @@ class _SearchScreenState extends State<SearchScreen> {
     });
   }
 
+  Future<void> _loadUserReports() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedReports = prefs.getStringList('user_reports') ?? [];
+    final reports = <Map<String, dynamic>>[];
+
+    for (final raw in savedReports) {
+      try {
+        final decoded = jsonDecode(raw);
+        if (decoded is Map) {
+          final report = Map<String, dynamic>.from(decoded);
+          final date = DateTime.tryParse(report['date']?.toString() ?? '');
+          reports.add({
+            ...report,
+            'name': report['item']?.toString() ?? 'Barang',
+            'status': report['type']?.toString() ?? 'Hilang',
+            'time': date == null
+                ? 'Waktu tidak diketahui'
+                : _formatRelativeTime(date),
+            'image': '',
+          });
+        }
+      } catch (_) {
+        // Lewati laporan yang tidak valid.
+      }
+    }
+
+    if (!mounted) return;
+    setState(() => _userReports = reports.reversed.toList());
+  }
+
+  String _formatRelativeTime(DateTime date) {
+    final difference = DateTime.now().difference(date);
+    if (difference.isNegative || difference.inMinutes < 1) {
+      return 'Baru saja';
+    }
+    if (difference.inMinutes < 60) {
+      return '${difference.inMinutes} menit yang lalu';
+    }
+    if (difference.inHours < 24) {
+      return '${difference.inHours} jam yang lalu';
+    }
+    if (difference.inDays == 1) return 'Kemarin';
+    if (difference.inDays < 7) return '${difference.inDays} hari yang lalu';
+    return '${date.day}/${date.month}/${date.year}';
+  }
+
+  List<Map<String, dynamic>> get _items => [..._userReports, ..._sampleItems];
+
   @override
   void dispose() {
     _searchController.dispose();
@@ -72,7 +124,7 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   // FILTER PENCARIAN
-  List<Map<String, String>> get _filteredItems {
+  List<Map<String, dynamic>> get _filteredItems {
     final keyword = _searchController.text.trim().toLowerCase();
 
     return _items.where((item) {
@@ -270,9 +322,10 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   // KARTU BARANG
-  Widget _itemCard(Map<String, String> item) {
+  Widget _itemCard(Map<String, dynamic> item) {
     final isLost = item['status'] == 'Hilang';
-    final imagePath = item['image'] ?? '';
+    final imagePath = item['image']?.toString() ?? '';
+    final imageData = item['imageData']?.toString() ?? '';
 
     return GestureDetector(
       onTap: () => _showItemDetail(item),
@@ -300,15 +353,21 @@ class _SearchScreenState extends State<SearchScreen> {
               child: SizedBox(
                 width: 78,
                 height: 78,
-                child: imagePath.isNotEmpty
-                    ? Image.asset(
-                        imagePath,
+                child: imageData.isNotEmpty
+                    ? Image.memory(
+                        base64Decode(imageData),
                         fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return _imagePlaceholder();
-                        },
+                        errorBuilder: (context, error, stackTrace) =>
+                            _imagePlaceholder(),
                       )
-                    : _imagePlaceholder(),
+                    : imagePath.isNotEmpty
+                        ? Image.asset(
+                            imagePath,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                                _imagePlaceholder(),
+                          )
+                        : _imagePlaceholder(),
               ),
             ),
 
@@ -456,8 +515,9 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   // DETAIL BARANG
-  void _showItemDetail(Map<String, String> item) {
-    final imagePath = item['image'] ?? '';
+  void _showItemDetail(Map<String, dynamic> item) {
+    final imagePath = item['image']?.toString() ?? '';
+    final imageData = item['imageData']?.toString() ?? '';
     final isLost = item['status'] == 'Hilang';
 
     showModalBottomSheet(
@@ -494,15 +554,21 @@ class _SearchScreenState extends State<SearchScreen> {
                   child: SizedBox(
                     width: 150,
                     height: 150,
-                    child: imagePath.isNotEmpty
-                        ? Image.asset(
-                            imagePath,
+                    child: imageData.isNotEmpty
+                        ? Image.memory(
+                            base64Decode(imageData),
                             fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return _imagePlaceholder();
-                            },
+                            errorBuilder: (context, error, stackTrace) =>
+                                _imagePlaceholder(),
                           )
-                        : _imagePlaceholder(),
+                        : imagePath.isNotEmpty
+                            ? Image.asset(
+                                imagePath,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    _imagePlaceholder(),
+                              )
+                            : _imagePlaceholder(),
                   ),
                 ),
 
@@ -654,7 +720,9 @@ class _SearchScreenState extends State<SearchScreen> {
                 label: 'Tambah',
                 selected: false,
                 onTap: () {
-                  Navigator.pushNamed(context, '/add-report');
+                  Navigator.pushNamed(context, '/add-report').then((_) {
+                    _loadUserReports();
+                  });
                 },
               ),
 

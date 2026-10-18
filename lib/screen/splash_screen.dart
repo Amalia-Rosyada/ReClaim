@@ -67,8 +67,13 @@ class _SplashScreenState extends State<SplashScreen> {
               children: [
                 const Spacer(),
 
-                // Logo
-                const ReClaimLogo(size: 100),
+                // Logo PNG ReClaim
+                Image.asset(
+                  'assets/logo.png',
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.contain,
+                ),
 
                 const SizedBox(height: 18),
 
@@ -147,77 +152,6 @@ class _SplashScreenState extends State<SplashScreen> {
       decoration: const BoxDecoration(
         color: lightBlue,
         shape: BoxShape.circle,
-      ),
-    );
-  }
-}
-
-// ==================== LOGO RECLAIM ====================
-
-class ReClaimLogo extends StatelessWidget {
-  final double size;
-
-  const ReClaimLogo({
-    super.key,
-    required this.size,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: size,
-      height: size,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          // Lingkaran kaca pembesar
-          Container(
-            width: size * 0.72,
-            height: size * 0.72,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: darkBlue,
-                width: size * 0.09,
-              ),
-            ),
-          ),
-
-          // Barang di dalam kaca pembesar
-          Icon(
-            Icons.inventory_2_rounded,
-            size: size * 0.28,
-            color: primaryBlue,
-          ),
-
-          // Gagang kaca pembesar
-          Positioned(
-            right: size * 0.02,
-            bottom: size * 0.04,
-            child: Transform.rotate(
-              angle: -0.75,
-              child: Container(
-                width: size * 0.38,
-                height: size * 0.09,
-                decoration: BoxDecoration(
-                  color: darkBlue,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-            ),
-          ),
-
-          // Efek pencarian
-          Positioned(
-            right: size * 0.01,
-            top: size * 0.05,
-            child: Icon(
-              Icons.auto_awesome,
-              size: size * 0.22,
-              color: primaryBlue,
-            ),
-          ),
-        ],
       ),
     );
   }

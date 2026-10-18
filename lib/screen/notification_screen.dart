@@ -13,6 +13,7 @@ class NotificationScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
+        automaticallyImplyLeading: false,
 
         title: const Text(
           'Notifikasi',
@@ -22,25 +23,11 @@ class NotificationScreen extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-
-          icon: const Icon(
-            Icons.arrow_back_ios_new,
-            color: darkBlue,
-            size: 20,
-          ),
-        ),
       ),
 
       body: SafeArea(
         child: ListView(
-          padding:
-              const EdgeInsets.all(24),
-
+          padding: const EdgeInsets.all(24),
           children: [
             const Text(
               'Notifikasi Terbaru',
@@ -55,10 +42,8 @@ class NotificationScreen extends StatelessWidget {
 
             _notificationCard(
               icon: Icons.check_circle_outline,
-              title:
-                  'Laporan berhasil dibuat',
-              message:
-                  'Laporan barang kamu berhasil dikirim.',
+              title: 'Laporan berhasil dibuat',
+              message: 'Laporan barang kamu berhasil dikirim.',
               time: 'Baru saja',
             ),
 
@@ -66,10 +51,8 @@ class NotificationScreen extends StatelessWidget {
 
             _notificationCard(
               icon: Icons.search_rounded,
-              title:
-                  'Ada barang yang cocok',
-              message:
-                  'Sistem menemukan barang yang mungkin sesuai dengan laporanmu.',
+              title: 'Ada barang yang cocok',
+              message: 'Sistem menemukan barang yang mungkin sesuai dengan laporanmu.',
               time: '1 jam yang lalu',
             ),
 
@@ -86,90 +69,56 @@ class NotificationScreen extends StatelessWidget {
         ),
       ),
 
-      bottomNavigationBar:
-          BottomNavigationBar(
+      bottomNavigationBar: BottomNavigationBar(
         currentIndex: 3,
-
-        type:
-            BottomNavigationBarType.fixed,
-
-        backgroundColor:
-            Colors.white,
-
-        selectedItemColor:
-            primaryBlue,
-
-        unselectedItemColor:
-            textBlue,
-
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Colors.white,
+        selectedItemColor: primaryBlue,
+        unselectedItemColor: textBlue,
         elevation: 10,
 
         onTap: (index) {
           switch (index) {
             case 0:
-              Navigator.pushReplacementNamed(
-                context,
-                '/home',
-              );
+              Navigator.pushReplacementNamed(context, '/home');
               break;
 
             case 1:
-              Navigator.pushReplacementNamed(
-                context,
-                '/search',
-              );
+              Navigator.pushReplacementNamed(context, '/search');
               break;
 
             case 2:
-              Navigator.pushNamed(
-                context,
-                '/add-report',
-              );
+              Navigator.pushNamed(context, '/add-report');
               break;
 
             case 3:
               break;
 
             case 4:
-              Navigator.pushReplacementNamed(
-                context,
-                '/profile',
-              );
+              Navigator.pushReplacementNamed(context, '/profile');
               break;
           }
         },
 
         items: const [
           BottomNavigationBarItem(
-            icon:
-                Icon(Icons.home_rounded),
+            icon: Icon(Icons.home_rounded),
             label: 'Beranda',
           ),
-
           BottomNavigationBarItem(
-            icon:
-                Icon(Icons.search_rounded),
+            icon: Icon(Icons.search_rounded),
             label: 'Pencarian',
           ),
-
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.add_circle_outline_rounded,
-            ),
+            icon: Icon(Icons.add_circle_outline_rounded),
             label: 'Tambah',
           ),
-
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.notifications_rounded,
-            ),
+            icon: Icon(Icons.notifications_rounded),
             label: 'Notifikasi',
           ),
-
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.person_outline_rounded,
-            ),
+            icon: Icon(Icons.person_outline_rounded),
             label: 'Profil',
           ),
         ],
@@ -184,51 +133,38 @@ class NotificationScreen extends StatelessWidget {
     required String time,
   }) {
     return Container(
-      padding:
-          const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
 
       decoration: BoxDecoration(
         color: lightBlue,
-        borderRadius:
-            BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(18),
       ),
 
       child: Row(
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
-
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             width: 45,
             height: 45,
-
-            decoration:
-                const BoxDecoration(
+            decoration: const BoxDecoration(
               color: Colors.white,
               shape: BoxShape.circle,
             ),
-
-            child: Icon(
-              icon,
-              color: primaryBlue,
-            ),
+            child: Icon(icon, color: primaryBlue),
           ),
 
           const SizedBox(width: 13),
 
           Expanded(
             child: Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment.start,
-
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
                   style: const TextStyle(
                     color: darkBlue,
                     fontSize: 14,
-                    fontWeight:
-                        FontWeight.bold,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
 
@@ -247,10 +183,7 @@ class NotificationScreen extends StatelessWidget {
 
                 Text(
                   time,
-                  style: const TextStyle(
-                    color: textBlue,
-                    fontSize: 10,
-                  ),
+                  style: const TextStyle(color: textBlue, fontSize: 10),
                 ),
               ],
             ),

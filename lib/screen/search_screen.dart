@@ -2,7 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'splash_screen.dart';
+import 'detail_item_screen.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -515,6 +517,8 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   // DETAIL BARANG
+  
+  // DETAIL BARANG (BOTTOM SHEET)
   void _showItemDetail(Map<String, dynamic> item) {
     final imagePath = item['image']?.toString() ?? '';
     final imageData = item['imageData']?.toString() ?? '';
@@ -637,15 +641,23 @@ class _SearchScreenState extends State<SearchScreen> {
 
                 const SizedBox(height: 25),
 
-                // TOMBOL DETAIL
+                // TOMBOL LIHAT DETAIL
                 SizedBox(
                   width: double.infinity,
                   height: 52,
                   child: ElevatedButton(
                     onPressed: () {
+                      // Tutup bottom sheet terlebih dahulu
                       Navigator.pop(sheetContext);
-                      _showMessage(
-                        'Detail barang akan dikembangkan selanjutnya.',
+
+                      // Buka halaman detail barang
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DetailItemScreen(
+                            item: item,
+                          ),
+                        ),
                       );
                     },
                     style: ElevatedButton.styleFrom(
@@ -672,6 +684,7 @@ class _SearchScreenState extends State<SearchScreen> {
       },
     );
   }
+
 
   // BOTTOM NAVIGATION
   Widget _bottomNavigationBar() {

@@ -22,6 +22,10 @@ class _ReportHistoryScreenState extends State<ReportHistoryScreen> {
     _loadReports();
   }
 
+  // ============================================================
+  // MEMUAT RIWAYAT LAPORAN
+  // ============================================================
+
   Future<void> _loadReports() async {
     final prefs = await SharedPreferences.getInstance();
     final savedReports = prefs.getStringList('user_reports') ?? [];
@@ -41,6 +45,10 @@ class _ReportHistoryScreenState extends State<ReportHistoryScreen> {
       _isLoading = false;
     });
   }
+
+  // ============================================================
+  // MENGHAPUS LAPORAN
+  // ============================================================
 
   Future<void> _deleteReport(Map<String, dynamic> report) async {
     final confirmed = await showDialog<bool>(
@@ -82,6 +90,7 @@ class _ReportHistoryScreenState extends State<ReportHistoryScreen> {
                 decoded['item']?.toString() == report['item']?.toString() &&
                 decoded['location']?.toString() ==
                     report['location']?.toString();
+
         if (matches && !removed) {
           removed = true;
           return true;
@@ -104,6 +113,10 @@ class _ReportHistoryScreenState extends State<ReportHistoryScreen> {
     );
   }
 
+  // ============================================================
+  // FORMAT TANGGAL
+  // ============================================================
+
   String _formatDate(dynamic value) {
     if (value == null) return '-';
     final date = DateTime.tryParse(value.toString());
@@ -113,8 +126,13 @@ class _ReportHistoryScreenState extends State<ReportHistoryScreen> {
       'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
       'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember',
     ];
+
     return '${date.day} ${months[date.month - 1]} ${date.year}';
   }
+
+  // ============================================================
+  // WARNA STATUS
+  // ============================================================
 
   Color _statusColor(String status) {
     switch (status.toLowerCase()) {
@@ -127,31 +145,39 @@ class _ReportHistoryScreenState extends State<ReportHistoryScreen> {
     }
   }
 
+  // ============================================================
+  // BUILD
+  // ============================================================
+
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: colorScheme.surface,
         elevation: 0,
         automaticallyImplyLeading: false,
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: const Icon(
+          icon: Icon(
             Icons.arrow_back_ios_new,
-            color: darkBlue,
+            color: colorScheme.onSurface,
             size: 20,
           ),
         ),
-        title: const Text(
+        title: Text(
           'Riwayat Laporan',
           style: TextStyle(
-            color: darkBlue,
+            color: colorScheme.onSurface,
             fontSize: 21,
             fontWeight: FontWeight.bold,
           ),
         ),
       ),
+
       body: SafeArea(
         child: _isLoading
             ? const Center(child: CircularProgressIndicator())
@@ -165,23 +191,27 @@ class _ReportHistoryScreenState extends State<ReportHistoryScreen> {
                           Icon(
                             Icons.history_rounded,
                             size: 70,
-                            color: textBlue.withValues(alpha: 0.5),
+                            color: colorScheme.onSurfaceVariant
+                                .withValues(alpha: 0.5),
                           ),
                           const SizedBox(height: 16),
-                          const Text(
+                          Text(
                             'Belum Ada Riwayat Laporan',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              color: darkBlue,
+                              color: colorScheme.onSurface,
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           const SizedBox(height: 8),
-                          const Text(
+                          Text(
                             'Laporan yang kamu kirim akan muncul di halaman ini.',
                             textAlign: TextAlign.center,
-                            style: TextStyle(color: textBlue, fontSize: 13),
+                            style: TextStyle(
+                              color: colorScheme.onSurfaceVariant,
+                              fontSize: 13,
+                            ),
                           ),
                         ],
                       ),
@@ -205,10 +235,10 @@ class _ReportHistoryScreenState extends State<ReportHistoryScreen> {
                           margin: const EdgeInsets.only(bottom: 14),
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: colorScheme.surface,
                             borderRadius: BorderRadius.circular(17),
                             border: Border.all(
-                              color: const Color(0xFFE0EAF5),
+                              color: colorScheme.outlineVariant,
                             ),
                           ),
                           child: Column(
@@ -222,7 +252,7 @@ class _ReportHistoryScreenState extends State<ReportHistoryScreen> {
                                     child: Container(
                                       width: 58,
                                       height: 58,
-                                      color: lightBlue,
+                                      color: colorScheme.surfaceContainerHighest,
                                       child: imageData.isNotEmpty
                                           ? Image.memory(
                                               base64Decode(imageData),
@@ -232,12 +262,14 @@ class _ReportHistoryScreenState extends State<ReportHistoryScreen> {
                                                 error,
                                                 stackTrace,
                                               ) =>
-                                                  _reportIcon(type),
+                                                  _reportIcon(type, context),
                                             )
-                                          : _reportIcon(type),
+                                          : _reportIcon(type, context),
                                     ),
                                   ),
+
                                   const SizedBox(width: 13),
+
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment:
@@ -246,8 +278,8 @@ class _ReportHistoryScreenState extends State<ReportHistoryScreen> {
                                         Text(
                                           report['item']?.toString() ??
                                               'Barang tanpa nama',
-                                          style: const TextStyle(
-                                            color: darkBlue,
+                                          style: TextStyle(
+                                            color: colorScheme.onSurface,
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
                                           ),
@@ -255,14 +287,15 @@ class _ReportHistoryScreenState extends State<ReportHistoryScreen> {
                                         const SizedBox(height: 5),
                                         Text(
                                           'Laporan $type',
-                                          style: const TextStyle(
-                                            color: textBlue,
+                                          style: TextStyle(
+                                            color: colorScheme.onSurfaceVariant,
                                             fontSize: 12,
                                           ),
                                         ),
                                       ],
                                     ),
                                   ),
+
                                   Container(
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: 9,
@@ -284,56 +317,69 @@ class _ReportHistoryScreenState extends State<ReportHistoryScreen> {
                                   ),
                                 ],
                               ),
+
                               const SizedBox(height: 14),
-                              const Divider(height: 1),
+
+                              Divider(
+                                height: 1,
+                                color: colorScheme.outlineVariant,
+                              ),
+
                               const SizedBox(height: 12),
+
                               Row(
                                 children: [
-                                  const Icon(
+                                  Icon(
                                     Icons.location_on_outlined,
-                                    color: textBlue,
+                                    color: colorScheme.onSurfaceVariant,
                                     size: 17,
                                   ),
                                   const SizedBox(width: 6),
                                   Expanded(
                                     child: Text(
                                       report['location']?.toString() ?? '-',
-                                      style: const TextStyle(
-                                        color: textBlue,
+                                      style: TextStyle(
+                                        color: colorScheme.onSurfaceVariant,
                                         fontSize: 12,
                                       ),
                                     ),
                                   ),
                                 ],
                               ),
+
                               const SizedBox(height: 8),
+
                               Row(
                                 children: [
-                                  const Icon(
+                                  Icon(
                                     Icons.calendar_today_outlined,
-                                    color: textBlue,
+                                    color: colorScheme.onSurfaceVariant,
                                     size: 15,
                                   ),
                                   const SizedBox(width: 7),
                                   Text(
                                     _formatDate(report['date']),
-                                    style: const TextStyle(
-                                      color: textBlue,
+                                    style: TextStyle(
+                                      color: colorScheme.onSurfaceVariant,
                                       fontSize: 12,
                                     ),
                                   ),
                                 ],
                               ),
+
                               const SizedBox(height: 10),
+
                               Text(
                                 report['description']?.toString() ?? '-',
-                                style: const TextStyle(
-                                  color: darkBlue,
+                                style: TextStyle(
+                                  color: colorScheme.onSurface,
                                   fontSize: 13,
                                   height: 1.4,
                                 ),
                               ),
+
                               const SizedBox(height: 4),
+
                               Align(
                                 alignment: Alignment.centerRight,
                                 child: TextButton.icon(
@@ -359,12 +405,18 @@ class _ReportHistoryScreenState extends State<ReportHistoryScreen> {
     );
   }
 
-  Widget _reportIcon(String type) {
+  // ============================================================
+  // IKON PENGGANTI FOTO LAPORAN
+  // ============================================================
+
+  Widget _reportIcon(String type, BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Icon(
       type == 'Hilang'
           ? Icons.search_off_rounded
           : Icons.inventory_2_outlined,
-      color: primaryBlue,
+      color: colorScheme.primary,
       size: 28,
     );
   }

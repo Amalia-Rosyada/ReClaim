@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -18,6 +17,8 @@ class DetailItemScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     final name = (item['name'] ?? item['item'] ?? 'Barang')
         .toString();
 
@@ -40,22 +41,20 @@ class DetailItemScreen extends StatelessWidget {
     final isLost = status.toLowerCase() == 'hilang';
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: colorScheme.surface,
+        foregroundColor: colorScheme.onSurface,
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: const Icon(
-            Icons.arrow_back_rounded,
-            color: darkBlue,
-          ),
+          icon: const Icon(Icons.arrow_back_rounded),
         ),
-        title: const Text(
+        title: Text(
           'Detail Barang',
           style: TextStyle(
-            color: darkBlue,
+            color: colorScheme.onSurface,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
@@ -74,8 +73,9 @@ class DetailItemScreen extends StatelessWidget {
               child: Container(
                 width: double.infinity,
                 height: 240,
-                color: lightBlue,
+                color: colorScheme.surfaceContainerHighest,
                 child: _buildItemImage(
+                  context,
                   imageData,
                   imagePath,
                 ),
@@ -113,8 +113,8 @@ class DetailItemScreen extends StatelessWidget {
             // NAMA BARANG
             Text(
               name,
-              style: const TextStyle(
-                color: darkBlue,
+              style: TextStyle(
+                color: colorScheme.onSurface,
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
@@ -123,11 +123,12 @@ class DetailItemScreen extends StatelessWidget {
             const SizedBox(height: 25),
 
             // INFORMASI BARANG
-            _sectionTitle('Informasi Barang'),
+            _sectionTitle(context, 'Informasi Barang'),
 
             const SizedBox(height: 15),
 
             _infoItem(
+              context: context,
               icon: Icons.location_on_outlined,
               title: 'Lokasi',
               value: location,
@@ -136,6 +137,7 @@ class DetailItemScreen extends StatelessWidget {
             const SizedBox(height: 18),
 
             _infoItem(
+              context: context,
               icon: Icons.calendar_today_outlined,
               title: 'Waktu Laporan',
               value: _formatDate(date),
@@ -144,7 +146,7 @@ class DetailItemScreen extends StatelessWidget {
             const SizedBox(height: 25),
 
             // DESKRIPSI
-            _sectionTitle('Deskripsi Barang'),
+            _sectionTitle(context, 'Deskripsi Barang'),
 
             const SizedBox(height: 12),
 
@@ -152,13 +154,13 @@ class DetailItemScreen extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: lightBlue,
+                color: colorScheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(15),
               ),
               child: Text(
                 description,
-                style: const TextStyle(
-                  color: darkBlue,
+                style: TextStyle(
+                  color: colorScheme.onSurface,
                   fontSize: 14,
                   height: 1.6,
                 ),
@@ -171,7 +173,11 @@ class DetailItemScreen extends StatelessWidget {
   }
 
   // MENAMPILKAN GAMBAR BARANG
-  Widget _buildItemImage(String imageData, String imagePath) {
+  Widget _buildItemImage(
+    BuildContext context,
+    String imageData,
+    String imagePath,
+  ) {
     if (imageData.isNotEmpty) {
       try {
         return Image.memory(
@@ -180,11 +186,11 @@ class DetailItemScreen extends StatelessWidget {
           height: 240,
           fit: BoxFit.cover,
           errorBuilder: (context, error, stackTrace) {
-            return _imagePlaceholder();
+            return _imagePlaceholder(context);
           },
         );
       } catch (_) {
-        return _imagePlaceholder();
+        return _imagePlaceholder(context);
       }
     }
 
@@ -195,33 +201,37 @@ class DetailItemScreen extends StatelessWidget {
         height: 240,
         fit: BoxFit.cover,
         errorBuilder: (context, error, stackTrace) {
-          return _imagePlaceholder();
+          return _imagePlaceholder(context);
         },
       );
     }
 
-    return _imagePlaceholder();
+    return _imagePlaceholder(context);
   }
 
   // GAMBAR PENGGANTI
-  Widget _imagePlaceholder() {
+  Widget _imagePlaceholder(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
-      color: lightBlue,
+      color: colorScheme.surfaceContainerHighest,
       alignment: Alignment.center,
-      child: const Icon(
+      child: Icon(
         Icons.image_outlined,
         size: 55,
-        color: primaryBlue,
+        color: colorScheme.primary,
       ),
     );
   }
 
   // JUDUL BAGIAN
-  Widget _sectionTitle(String title) {
+  Widget _sectionTitle(BuildContext context, String title) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Text(
       title,
-      style: const TextStyle(
-        color: darkBlue,
+      style: TextStyle(
+        color: colorScheme.onSurface,
         fontSize: 18,
         fontWeight: FontWeight.bold,
       ),
@@ -230,10 +240,13 @@ class DetailItemScreen extends StatelessWidget {
 
   // INFORMASI DETAIL
   Widget _infoItem({
+    required BuildContext context,
     required IconData icon,
     required String title,
     required String value,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -241,12 +254,12 @@ class DetailItemScreen extends StatelessWidget {
           width: 42,
           height: 42,
           decoration: BoxDecoration(
-            color: lightBlue,
+            color: colorScheme.primaryContainer,
             borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(
             icon,
-            color: primaryBlue,
+            color: colorScheme.primary,
             size: 21,
           ),
         ),
@@ -259,16 +272,16 @@ class DetailItemScreen extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: const TextStyle(
-                  color: textBlue,
+                style: TextStyle(
+                  color: colorScheme.onSurfaceVariant,
                   fontSize: 12,
                 ),
               ),
               const SizedBox(height: 5),
               Text(
                 value,
-                style: const TextStyle(
-                  color: darkBlue,
+                style: TextStyle(
+                  color: colorScheme.onSurface,
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                 ),

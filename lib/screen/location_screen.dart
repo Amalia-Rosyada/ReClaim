@@ -13,9 +13,7 @@ class LocationScreen extends StatefulWidget {
 }
 
 class _LocationScreenState extends State<LocationScreen> {
-  static const Color darkBlue = Color(0xFF173B67);
   static const Color primaryBlue = Color(0xFF3989E8);
-  static const Color textBlue = Color(0xFF71839B);
 
   List<Map<String, dynamic>> _provinces = [];
   List<Map<String, dynamic>> _cities = [];
@@ -205,34 +203,64 @@ class _LocationScreenState extends State<LocationScreen> {
     }
   }
 
-  InputDecoration _decoration(String label, IconData icon) {
+  // ============================================================
+  // DEKORASI INPUT
+  // ============================================================
+
+  InputDecoration _decoration(
+    BuildContext context,
+    String label,
+    IconData icon,
+  ) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return InputDecoration(
       labelText: label,
-      prefixIcon: Icon(icon, color: darkBlue),
+      prefixIcon: Icon(
+        icon,
+        color: colorScheme.onSurfaceVariant,
+      ),
       filled: true,
-      fillColor: const Color(0xFFF7FAFE),
+      fillColor: colorScheme.surface,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(15),
-        borderSide: const BorderSide(color: Color(0xFFD8E5F3)),
+        borderSide: BorderSide(color: colorScheme.outlineVariant),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(15),
-        borderSide: const BorderSide(color: Color(0xFFD8E5F3)),
+        borderSide: BorderSide(color: colorScheme.outlineVariant),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(15),
+        borderSide: const BorderSide(
+          color: primaryBlue,
+          width: 1.5,
+        ),
       ),
     );
   }
 
+  // ============================================================
+  // BUILD
+  // ============================================================
+
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: colorScheme.surface,
+        foregroundColor: colorScheme.onSurface,
         elevation: 0,
         automaticallyImplyLeading: false,
-        title: const Text(
+        title: Text(
           'Pilih Lokasi',
-          style: TextStyle(color: darkBlue, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: colorScheme.onSurface,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         centerTitle: true,
       ),
@@ -242,46 +270,63 @@ class _LocationScreenState extends State<LocationScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // ILUSTRASI LOKASI
               Center(
                 child: Container(
                   width: 100,
                   height: 100,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFEAF3FF),
+                    color: colorScheme.primaryContainer,
                     borderRadius: BorderRadius.circular(28),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.location_on_rounded,
                     size: 55,
-                    color: primaryBlue,
+                    color: colorScheme.primary,
                   ),
                 ),
               ),
+
               const SizedBox(height: 24),
-              const Text(
+
+              // JUDUL
+              Text(
                 'Di mana lokasi kamu?',
                 style: TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
-                  color: darkBlue,
+                  color: colorScheme.onSurface,
                 ),
               ),
+
               const SizedBox(height: 8),
-              const Text(
+
+              Text(
                 'Pilih wilayah tempat kamu berada untuk '
                 'membantu menemukan barang di sekitar.',
-                style: TextStyle(fontSize: 15, color: textBlue),
+                style: TextStyle(
+                  fontSize: 15,
+                  color: colorScheme.onSurfaceVariant,
+                ),
               ),
+
               const SizedBox(height: 28),
 
-              const Text(
+              // PILIH WILAYAH MANUAL
+              Text(
                 'Pilih wilayah secara manual',
-                style: TextStyle(fontWeight: FontWeight.bold, color: darkBlue),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: colorScheme.onSurface,
+                ),
               ),
+
               const SizedBox(height: 14),
 
               if (_loadingProvinces)
-                const Center(child: CircularProgressIndicator())
+                const Center(
+                  child: CircularProgressIndicator(),
+                )
               else if (_provinces.isEmpty)
                 OutlinedButton.icon(
                   onPressed: _loadProvinces,
@@ -292,7 +337,11 @@ class _LocationScreenState extends State<LocationScreen> {
                 DropdownButtonFormField<String>(
                   isExpanded: true,
                   initialValue: _provinceId,
-                  decoration: _decoration('Provinsi', Icons.map_outlined),
+                  decoration: _decoration(
+                    context,
+                    'Provinsi',
+                    Icons.map_outlined,
+                  ),
                   hint: const Text('Pilih provinsi'),
                   items: _provinces.map((province) {
                     return DropdownMenuItem<String>(
@@ -321,10 +370,12 @@ class _LocationScreenState extends State<LocationScreen> {
 
               const SizedBox(height: 16),
 
+              // PILIH KABUPATEN/KOTA
               DropdownButtonFormField<String>(
                 isExpanded: true,
                 initialValue: _cityName,
                 decoration: _decoration(
+                  context,
                   'Kabupaten/Kota',
                   Icons.location_city_outlined,
                 ),
@@ -358,26 +409,43 @@ class _LocationScreenState extends State<LocationScreen> {
 
               const SizedBox(height: 28),
 
-              const Row(
+              // PEMISAH
+              Row(
                 children: [
-                  Expanded(child: Divider()),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 12),
-                    child: Text('ATAU', style: TextStyle(color: textBlue)),
+                  Expanded(
+                    child: Divider(
+                      color: colorScheme.outlineVariant,
+                    ),
                   ),
-                  Expanded(child: Divider()),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Text(
+                      'ATAU',
+                      style: TextStyle(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Divider(
+                      color: colorScheme.outlineVariant,
+                    ),
+                  ),
                 ],
               ),
 
               const SizedBox(height: 22),
 
+              // TOMBOL GPS
               OutlinedButton.icon(
                 onPressed: _gettingLocation ? null : _getCurrentLocation,
                 icon: _gettingLocation
                     ? const SizedBox(
                         width: 20,
                         height: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2),
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                        ),
                       )
                     : const Icon(Icons.my_location),
                 label: Text(
@@ -387,42 +455,50 @@ class _LocationScreenState extends State<LocationScreen> {
                 ),
                 style: OutlinedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 54),
-                  foregroundColor: primaryBlue,
-                  side: const BorderSide(color: primaryBlue),
+                  foregroundColor: colorScheme.primary,
+                  side: BorderSide(color: colorScheme.primary),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
                   ),
                 ),
               ),
 
+              // INFORMASI GPS BERHASIL
               if (_latitude != null && _longitude != null) ...[
                 const SizedBox(height: 12),
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFEAF8EF),
+                    color: colorScheme.tertiaryContainer,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
                     'Lokasi GPS berhasil didapatkan.\n'
                     'Lat: ${_latitude!.toStringAsFixed(5)}\n'
                     'Long: ${_longitude!.toStringAsFixed(5)}',
-                    style: const TextStyle(
-                      color: Color(0xFF216B40),
+                    style: TextStyle(
+                      color: colorScheme.onTertiaryContainer,
                       height: 1.6,
                     ),
                   ),
                 ),
               ],
 
+              // PESAN ERROR
               if (_error != null) ...[
                 const SizedBox(height: 14),
-                Text(_error!, style: const TextStyle(color: Colors.red)),
+                Text(
+                  _error!,
+                  style: TextStyle(
+                    color: colorScheme.error,
+                  ),
+                ),
               ],
 
               const SizedBox(height: 28),
 
+              // TOMBOL LANJUTKAN
               SizedBox(
                 width: double.infinity,
                 height: 54,

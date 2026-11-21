@@ -71,6 +71,10 @@ class _SearchScreenState extends State<SearchScreen> {
     });
   }
 
+  // ============================================================
+  // MEMBACA LAPORAN PENGGUNA
+  // ============================================================
+
   Future<void> _loadUserReports() async {
     final prefs = await SharedPreferences.getInstance();
     final savedReports = prefs.getStringList('user_reports') ?? [];
@@ -79,9 +83,13 @@ class _SearchScreenState extends State<SearchScreen> {
     for (final raw in savedReports) {
       try {
         final decoded = jsonDecode(raw);
+
         if (decoded is Map) {
           final report = Map<String, dynamic>.from(decoded);
-          final date = DateTime.tryParse(report['date']?.toString() ?? '');
+          final date = DateTime.tryParse(
+            report['date']?.toString() ?? '',
+          );
+
           reports.add({
             ...report,
             'name': report['item']?.toString() ?? 'Barang',
@@ -98,11 +106,19 @@ class _SearchScreenState extends State<SearchScreen> {
     }
 
     if (!mounted) return;
-    setState(() => _userReports = reports.reversed.toList());
+
+    setState(() {
+      _userReports = reports.reversed.toList();
+    });
   }
+
+  // ============================================================
+  // FORMAT WAKTU
+  // ============================================================
 
   String _formatRelativeTime(DateTime date) {
     final difference = DateTime.now().difference(date);
+
     if (difference.isNegative || difference.inMinutes < 1) {
       return 'Baru saja';
     }
@@ -113,11 +129,17 @@ class _SearchScreenState extends State<SearchScreen> {
       return '${difference.inHours} jam yang lalu';
     }
     if (difference.inDays == 1) return 'Kemarin';
-    if (difference.inDays < 7) return '${difference.inDays} hari yang lalu';
+    if (difference.inDays < 7) {
+      return '${difference.inDays} hari yang lalu';
+    }
+
     return '${date.day}/${date.month}/${date.year}';
   }
 
-  List<Map<String, dynamic>> get _items => [..._userReports, ..._sampleItems];
+  List<Map<String, dynamic>> get _items => [
+        ..._userReports,
+        ..._sampleItems,
+      ];
 
   @override
   void dispose() {
@@ -125,13 +147,17 @@ class _SearchScreenState extends State<SearchScreen> {
     super.dispose();
   }
 
+  // ============================================================
   // FILTER PENCARIAN
+  // ============================================================
+
   List<Map<String, dynamic>> get _filteredItems {
     final keyword = _searchController.text.trim().toLowerCase();
 
     return _items.where((item) {
-      final name = (item['name'] ?? '').toLowerCase();
-      final location = (item['location'] ?? '').toLowerCase();
+      final name = (item['name'] ?? '').toString().toLowerCase();
+      final location =
+          (item['location'] ?? '').toString().toLowerCase();
       final status = item['status'] ?? '';
 
       final matchesSearch = keyword.isEmpty ||
@@ -146,7 +172,10 @@ class _SearchScreenState extends State<SearchScreen> {
     }).toList();
   }
 
+  // ============================================================
   // PESAN
+  // ============================================================
+
   void _showMessage(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -156,27 +185,33 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
+  // ============================================================
   // BUILD HALAMAN
+  // ============================================================
+
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final results = _filteredItems;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
         scrolledUnderElevation: 0,
         automaticallyImplyLeading: false,
-        title: const Text(
+        title: Text(
           'Pencarian',
           style: TextStyle(
-            color: darkBlue,
+            color: colorScheme.onSurface,
             fontSize: 23,
             fontWeight: FontWeight.bold,
           ),
         ),
       ),
+
       body: SafeArea(
         child: Column(
           children: [
@@ -190,16 +225,19 @@ class _SearchScreenState extends State<SearchScreen> {
                     Container(
                       height: 54,
                       decoration: BoxDecoration(
-                        color: lightBlue,
+                        color: colorScheme.surfaceContainerHighest,
                         borderRadius: BorderRadius.circular(17),
                       ),
                       child: TextField(
                         controller: _searchController,
                         textInputAction: TextInputAction.search,
+                        style: TextStyle(
+                          color: colorScheme.onSurface,
+                        ),
                         decoration: InputDecoration(
                           hintText: 'Cari barang...',
-                          hintStyle: const TextStyle(
-                            color: textBlue,
+                          hintStyle: TextStyle(
+                            color: colorScheme.onSurfaceVariant,
                             fontSize: 15,
                           ),
                           prefixIcon: const Icon(
@@ -209,9 +247,9 @@ class _SearchScreenState extends State<SearchScreen> {
                           suffixIcon: _searchController.text.isNotEmpty
                               ? IconButton(
                                   onPressed: _searchController.clear,
-                                  icon: const Icon(
+                                  icon: Icon(
                                     Icons.close,
-                                    color: textBlue,
+                                    color: colorScheme.onSurfaceVariant,
                                   ),
                                 )
                               : null,
@@ -246,19 +284,19 @@ class _SearchScreenState extends State<SearchScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
+                        Text(
                           'Hasil Pencarian',
                           style: TextStyle(
                             fontSize: 19,
                             fontWeight: FontWeight.bold,
-                            color: darkBlue,
+                            color: colorScheme.onSurface,
                           ),
                         ),
                         Text(
                           '${results.length} barang',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 13,
-                            color: textBlue,
+                            color: colorScheme.onSurfaceVariant,
                           ),
                         ),
                       ],
@@ -268,7 +306,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
                     // HASIL PENCARIAN
                     if (results.isEmpty)
-                      _emptyResult()
+                      _emptyResult(context)
                     else
                       ...results.map(
                         (item) => Padding(
@@ -283,12 +321,17 @@ class _SearchScreenState extends State<SearchScreen> {
           ],
         ),
       ),
+
       bottomNavigationBar: _bottomNavigationBar(),
     );
   }
 
+  // ============================================================
   // TOMBOL FILTER
+  // ============================================================
+
   Widget _filterButton(String title) {
+    final colorScheme = Theme.of(context).colorScheme;
     final isSelected = _selectedFilter == title;
 
     return GestureDetector(
@@ -303,18 +346,22 @@ class _SearchScreenState extends State<SearchScreen> {
           vertical: 10,
         ),
         decoration: BoxDecoration(
-          color: isSelected ? primaryBlue : Colors.white,
+          color: isSelected
+              ? primaryBlue
+              : colorScheme.surface,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isSelected
                 ? primaryBlue
-                : const Color(0xFFD8E5F3),
+                : colorScheme.outlineVariant,
           ),
         ),
         child: Text(
           title,
           style: TextStyle(
-            color: isSelected ? Colors.white : textBlue,
+            color: isSelected
+                ? Colors.white
+                : colorScheme.onSurfaceVariant,
             fontSize: 14,
             fontWeight: FontWeight.w600,
           ),
@@ -323,8 +370,12 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
+  // ============================================================
   // KARTU BARANG
+  // ============================================================
+
   Widget _itemCard(Map<String, dynamic> item) {
+    final colorScheme = Theme.of(context).colorScheme;
     final isLost = item['status'] == 'Hilang';
     final imagePath = item['image']?.toString() ?? '';
     final imageData = item['imageData']?.toString() ?? '';
@@ -334,10 +385,10 @@ class _SearchScreenState extends State<SearchScreen> {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: colorScheme.surface,
           borderRadius: BorderRadius.circular(18),
           border: Border.all(
-            color: const Color(0xFFE1EAF4),
+            color: colorScheme.outlineVariant,
           ),
           boxShadow: [
             BoxShadow(
@@ -382,42 +433,48 @@ class _SearchScreenState extends State<SearchScreen> {
                 children: [
                   Text(
                     item['name'] ?? 'Barang',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
-                      color: darkBlue,
+                      color: colorScheme.onSurface,
                     ),
                   ),
+
                   const SizedBox(height: 6),
+
                   Row(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.location_on_outlined,
                         size: 15,
-                        color: textBlue,
+                        color: colorScheme.onSurfaceVariant,
                       ),
                       const SizedBox(width: 4),
                       Expanded(
                         child: Text(
                           item['location'] ?? 'Lokasi tidak tersedia',
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12,
-                            color: textBlue,
+                            color: colorScheme.onSurfaceVariant,
                           ),
                         ),
                       ),
                     ],
                   ),
+
                   const SizedBox(height: 4),
+
                   Text(
                     item['time'] ?? '',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 11,
-                      color: textBlue,
+                      color: colorScheme.onSurfaceVariant,
                     ),
                   ),
+
                   const SizedBox(height: 7),
+
                   Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 9,
@@ -445,9 +502,10 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
 
             const SizedBox(width: 4),
-            const Icon(
+
+            Icon(
               Icons.chevron_right_rounded,
-              color: textBlue,
+              color: colorScheme.onSurfaceVariant,
             ),
           ],
         ),
@@ -455,10 +513,15 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
+  // ============================================================
   // GAMBAR PENGGANTI JIKA FILE TIDAK DITEMUKAN
+  // ============================================================
+
   Widget _imagePlaceholder() {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
-      color: lightBlue,
+      color: colorScheme.surfaceContainerHighest,
       alignment: Alignment.center,
       child: const Icon(
         Icons.image_outlined,
@@ -468,8 +531,13 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
+  // ============================================================
   // HASIL KOSONG
-  Widget _emptyResult() {
+  // ============================================================
+
+  Widget _emptyResult(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(
@@ -481,8 +549,8 @@ class _SearchScreenState extends State<SearchScreen> {
           Container(
             width: 75,
             height: 75,
-            decoration: const BoxDecoration(
-              color: lightBlue,
+            decoration: BoxDecoration(
+              color: colorScheme.surfaceContainerHighest,
               shape: BoxShape.circle,
             ),
             child: const Icon(
@@ -491,23 +559,27 @@ class _SearchScreenState extends State<SearchScreen> {
               color: primaryBlue,
             ),
           ),
+
           const SizedBox(height: 18),
-          const Text(
+
+          Text(
             'Barang tidak ditemukan',
             style: TextStyle(
               fontSize: 17,
               fontWeight: FontWeight.bold,
-              color: darkBlue,
+              color: colorScheme.onSurface,
             ),
           ),
+
           const SizedBox(height: 7),
-          const Text(
+
+          Text(
             'Coba gunakan kata kunci lain\n'
             'atau ubah filter pencarian.',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 13,
-              color: textBlue,
+              color: colorScheme.onSurfaceVariant,
               height: 1.5,
             ),
           ),
@@ -516,17 +588,20 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  // DETAIL BARANG
-  
+  // ============================================================
   // DETAIL BARANG (BOTTOM SHEET)
+  // ============================================================
+
   void _showItemDetail(Map<String, dynamic> item) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     final imagePath = item['image']?.toString() ?? '';
     final imageData = item['imageData']?.toString() ?? '';
     final isLost = item['status'] == 'Hilang';
 
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.white,
+      backgroundColor: colorScheme.surface,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
@@ -545,7 +620,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   width: 45,
                   height: 5,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFD8E5F3),
+                    color: colorScheme.outlineVariant,
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
@@ -582,10 +657,10 @@ class _SearchScreenState extends State<SearchScreen> {
                 Text(
                   item['name'] ?? 'Barang',
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
-                    color: darkBlue,
+                    color: colorScheme.onSurface,
                   ),
                 ),
 
@@ -609,9 +684,9 @@ class _SearchScreenState extends State<SearchScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.location_on_outlined,
-                      color: textBlue,
+                      color: colorScheme.onSurfaceVariant,
                       size: 18,
                     ),
                     const SizedBox(width: 5),
@@ -619,8 +694,8 @@ class _SearchScreenState extends State<SearchScreen> {
                       child: Text(
                         item['location'] ?? 'Lokasi tidak tersedia',
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: textBlue,
+                        style: TextStyle(
+                          color: colorScheme.onSurfaceVariant,
                           fontSize: 14,
                         ),
                       ),
@@ -633,8 +708,8 @@ class _SearchScreenState extends State<SearchScreen> {
                 // WAKTU
                 Text(
                   item['time'] ?? '',
-                  style: const TextStyle(
-                    color: textBlue,
+                  style: TextStyle(
+                    color: colorScheme.onSurfaceVariant,
                     fontSize: 13,
                   ),
                 ),
@@ -647,10 +722,10 @@ class _SearchScreenState extends State<SearchScreen> {
                   height: 52,
                   child: ElevatedButton(
                     onPressed: () {
-                      // Tutup bottom sheet terlebih dahulu
+                      // Tutup bottom sheet terlebih dahulu.
                       Navigator.pop(sheetContext);
 
-                      // Buka halaman detail barang
+                      // Buka halaman detail barang.
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -685,15 +760,19 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-
+  // ============================================================
   // BOTTOM NAVIGATION
+  // ============================================================
+
   Widget _bottomNavigationBar() {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
+      decoration: BoxDecoration(
+        color: Theme.of(context).scaffoldBackgroundColor,
         border: Border(
           top: BorderSide(
-            color: Color(0xFFE5ECF4),
+            color: colorScheme.outlineVariant,
           ),
         ),
       ),
@@ -770,7 +849,10 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
+  // ============================================================
   // ITEM NAVIGASI
+  // ============================================================
+
   Widget _navItem({
     required IconData icon,
     required IconData activeIcon,
@@ -778,6 +860,8 @@ class _SearchScreenState extends State<SearchScreen> {
     required bool selected,
     required VoidCallback onTap,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
@@ -789,7 +873,9 @@ class _SearchScreenState extends State<SearchScreen> {
             Icon(
               selected ? activeIcon : icon,
               size: 24,
-              color: selected ? primaryBlue : textBlue,
+              color: selected
+                  ? primaryBlue
+                  : colorScheme.onSurfaceVariant,
             ),
             const SizedBox(height: 4),
             Text(
@@ -799,7 +885,9 @@ class _SearchScreenState extends State<SearchScreen> {
                 fontSize: 10,
                 fontWeight:
                     selected ? FontWeight.w600 : FontWeight.normal,
-                color: selected ? primaryBlue : textBlue,
+                color: selected
+                    ? primaryBlue
+                    : colorScheme.onSurfaceVariant,
               ),
             ),
           ],

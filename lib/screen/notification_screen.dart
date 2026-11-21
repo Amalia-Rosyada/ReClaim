@@ -7,18 +7,21 @@ class NotificationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
 
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        foregroundColor: colorScheme.onSurface,
         elevation: 0,
+        scrolledUnderElevation: 0,
         automaticallyImplyLeading: false,
-
-        title: const Text(
+        title: Text(
           'Notifikasi',
           style: TextStyle(
-            color: darkBlue,
+            color: colorScheme.onSurface,
             fontSize: 23,
             fontWeight: FontWeight.bold,
           ),
@@ -29,10 +32,10 @@ class NotificationScreen extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.all(24),
           children: [
-            const Text(
+            Text(
               'Notifikasi Terbaru',
               style: TextStyle(
-                color: darkBlue,
+                color: colorScheme.onSurface,
                 fontSize: 19,
                 fontWeight: FontWeight.bold,
               ),
@@ -41,6 +44,7 @@ class NotificationScreen extends StatelessWidget {
             const SizedBox(height: 12),
 
             _notificationCard(
+              context: context,
               icon: Icons.info_outline,
               title: 'Selamat datang di ReClaim',
               message:
@@ -54,9 +58,9 @@ class NotificationScreen extends StatelessWidget {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 3,
         type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         selectedItemColor: primaryBlue,
-        unselectedItemColor: textBlue,
+        unselectedItemColor: colorScheme.onSurfaceVariant,
         elevation: 10,
 
         onTap: (index) {
@@ -108,17 +112,23 @@ class NotificationScreen extends StatelessWidget {
     );
   }
 
+  // ============================================================
+  // KARTU NOTIFIKASI
+  // ============================================================
+
   Widget _notificationCard({
+    required BuildContext context,
     required IconData icon,
     required String title,
     required String message,
     required String time,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: const EdgeInsets.all(16),
-
       decoration: BoxDecoration(
-        color: lightBlue,
+        color: colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(18),
       ),
 
@@ -128,11 +138,14 @@ class NotificationScreen extends StatelessWidget {
           Container(
             width: 45,
             height: 45,
-            decoration: const BoxDecoration(
-              color: Colors.white,
+            decoration: BoxDecoration(
+              color: colorScheme.surface,
               shape: BoxShape.circle,
             ),
-            child: Icon(icon, color: primaryBlue),
+            child: const Icon(
+              Icons.info_outline,
+              color: primaryBlue,
+            ),
           ),
 
           const SizedBox(width: 13),
@@ -143,8 +156,8 @@ class NotificationScreen extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
-                    color: darkBlue,
+                  style: TextStyle(
+                    color: colorScheme.onSurface,
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
                   ),
@@ -154,8 +167,8 @@ class NotificationScreen extends StatelessWidget {
 
                 Text(
                   message,
-                  style: const TextStyle(
-                    color: textBlue,
+                  style: TextStyle(
+                    color: colorScheme.onSurfaceVariant,
                     fontSize: 12,
                     height: 1.4,
                   ),
@@ -165,7 +178,10 @@ class NotificationScreen extends StatelessWidget {
 
                 Text(
                   time,
-                  style: const TextStyle(color: textBlue, fontSize: 10),
+                  style: TextStyle(
+                    color: colorScheme.onSurfaceVariant,
+                    fontSize: 10,
+                  ),
                 ),
               ],
             ),

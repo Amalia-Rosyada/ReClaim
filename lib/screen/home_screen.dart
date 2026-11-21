@@ -109,13 +109,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
 
       // APP BAR
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
+        scrolledUnderElevation: 0,
         automaticallyImplyLeading: false,
         title: Row(
           mainAxisSize: MainAxisSize.min,
@@ -127,10 +130,10 @@ class _HomeScreenState extends State<HomeScreen> {
               fit: BoxFit.contain,
             ),
             const SizedBox(width: 10),
-            const Text(
+            Text(
               'ReClaim',
               style: TextStyle(
-                color: darkBlue,
+                color: colorScheme.onSurface,
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
@@ -140,9 +143,9 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           IconButton(
             onPressed: () => _goTo(context, '/notification'),
-            icon: const Icon(
+            icon: Icon(
               Icons.notifications_none_rounded,
-              color: darkBlue,
+              color: colorScheme.onSurface,
             ),
           ),
           const SizedBox(width: 8),
@@ -159,21 +162,23 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Halo, selamat datang! 👋',
+                Text(
+                  'Halo, Selamat datang! 👋',
                   style: TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.bold,
-                    color: darkBlue,
+                    color: colorScheme.onSurface,
                   ),
                 ),
+
                 const SizedBox(height: 8),
-                const Text(
+
+                Text(
                   'Temukan kembali barang yang hilang '
                   'atau bantu orang lain menemukan barangnya.',
                   style: TextStyle(
                     fontSize: 14,
-                    color: textBlue,
+                    color: colorScheme.onSurfaceVariant,
                     height: 1.5,
                   ),
                 ),
@@ -187,20 +192,20 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: 54,
                     padding: const EdgeInsets.symmetric(horizontal: 18),
                     decoration: BoxDecoration(
-                      color: lightBlue,
+                      color: colorScheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(17),
                     ),
-                    child: const Row(
+                    child: Row(
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.search_rounded,
                           color: primaryBlue,
                         ),
-                        SizedBox(width: 12),
+                        const SizedBox(width: 12),
                         Text(
                           'Cari barang...',
                           style: TextStyle(
-                            color: textBlue,
+                            color: colorScheme.onSurfaceVariant,
                             fontSize: 15,
                           ),
                         ),
@@ -219,7 +224,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         icon: Icons.search_rounded,
                         title: 'Cari Barang',
                         subtitle: 'Temukan barang',
-                        color: lightBlue,
                         onTap: () => _goTo(context, '/search'),
                       ),
                     ),
@@ -229,7 +233,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         icon: Icons.add_rounded,
                         title: 'Tambah Laporan',
                         subtitle: 'Laporkan barang',
-                        color: const Color(0xFFF0F7FF),
                         onTap: () => _goTo(context, '/add-report'),
                       ),
                     ),
@@ -242,12 +245,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
+                    Text(
                       'Laporan Terbaru',
                       style: TextStyle(
                         fontSize: 19,
                         fontWeight: FontWeight.bold,
-                        color: darkBlue,
+                        color: colorScheme.onSurface,
                       ),
                     ),
                     TextButton(
@@ -273,7 +276,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   )
                 else if (_reports.isEmpty)
-                  _buildEmptyReports()
+                  _buildEmptyReports(context)
                 else
                   ..._reports.map((report) {
                     final type = report['type']?.toString() ?? 'Hilang';
@@ -305,9 +308,9 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 0,
         type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         selectedItemColor: primaryBlue,
-        unselectedItemColor: textBlue,
+        unselectedItemColor: colorScheme.onSurfaceVariant,
         elevation: 10,
         onTap: (index) {
           switch (index) {
@@ -353,36 +356,45 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildEmptyReports() {
+  // ============================================================
+  // TAMPILAN KETIKA BELUM ADA LAPORAN
+  // ============================================================
+
+  Widget _buildEmptyReports(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+      padding: const EdgeInsets.symmetric(
+        vertical: 30,
+        horizontal: 20,
+      ),
       decoration: BoxDecoration(
-        color: lightBlue,
+        color: colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(18),
       ),
-      child: const Column(
+      child: Column(
         children: [
-          Icon(
+          const Icon(
             Icons.inventory_2_outlined,
             size: 42,
             color: primaryBlue,
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Text(
             'Belum ada laporan',
             style: TextStyle(
-              color: darkBlue,
+              color: colorScheme.onSurface,
               fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 5),
+          const SizedBox(height: 5),
           Text(
             'Laporan yang kamu buat akan muncul di sini.',
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: textBlue,
+              color: colorScheme.onSurfaceVariant,
               fontSize: 12,
             ),
           ),
@@ -392,30 +404,33 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
+// ============================================================
 // MENU CARD
+// ============================================================
+
 class _MenuCard extends StatelessWidget {
   final IconData icon;
   final String title;
   final String subtitle;
-  final Color color;
   final VoidCallback onTap;
 
   const _MenuCard({
     required this.icon,
     required this.title,
     required this.subtitle,
-    required this.color,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: color,
+          color: colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Column(
@@ -424,8 +439,8 @@ class _MenuCard extends StatelessWidget {
             Container(
               width: 45,
               height: 45,
-              decoration: const BoxDecoration(
-                color: Colors.white,
+              decoration: BoxDecoration(
+                color: colorScheme.surface,
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -437,8 +452,8 @@ class _MenuCard extends StatelessWidget {
             const SizedBox(height: 14),
             Text(
               title,
-              style: const TextStyle(
-                color: darkBlue,
+              style: TextStyle(
+                color: colorScheme.onSurface,
                 fontSize: 15,
                 fontWeight: FontWeight.bold,
               ),
@@ -446,8 +461,8 @@ class _MenuCard extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               subtitle,
-              style: const TextStyle(
-                color: textBlue,
+              style: TextStyle(
+                color: colorScheme.onSurfaceVariant,
                 fontSize: 12,
               ),
             ),
@@ -458,7 +473,10 @@ class _MenuCard extends StatelessWidget {
   }
 }
 
+// ============================================================
 // KARTU LAPORAN
+// ============================================================
+
 class _ReportCard extends StatelessWidget {
   final String title;
   final String location;
@@ -478,15 +496,16 @@ class _ReportCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final bool isLost = status == 'Hilang';
 
     return Container(
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: const Color(0xFFE0EAF5),
+          color: colorScheme.outlineVariant,
         ),
       ),
       child: Row(
@@ -496,22 +515,25 @@ class _ReportCard extends StatelessWidget {
             width: 65,
             height: 65,
             decoration: BoxDecoration(
-              color: lightBlue,
+              color: colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(15),
             ),
             alignment: Alignment.center,
             child: imageData.isNotEmpty
-                ? Image.memory(
-                    base64Decode(imageData),
-                    width: 65,
-                    height: 65,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => Icon(
-                      isLost
-                          ? Icons.search_off_rounded
-                          : Icons.inventory_2_outlined,
-                      color: primaryBlue,
-                      size: 30,
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: Image.memory(
+                      base64Decode(imageData),
+                      width: 65,
+                      height: 65,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => Icon(
+                        isLost
+                            ? Icons.search_off_rounded
+                            : Icons.inventory_2_outlined,
+                        color: primaryBlue,
+                        size: 30,
+                      ),
                     ),
                   )
                 : Icon(
@@ -532,8 +554,8 @@ class _ReportCard extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
-                    color: darkBlue,
+                  style: TextStyle(
+                    color: colorScheme.onSurface,
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
                   ),
@@ -541,16 +563,16 @@ class _ReportCard extends StatelessWidget {
                 const SizedBox(height: 5),
                 Text(
                   location,
-                  style: const TextStyle(
-                    color: textBlue,
+                  style: TextStyle(
+                    color: colorScheme.onSurfaceVariant,
                     fontSize: 12,
                   ),
                 ),
                 const SizedBox(height: 3),
                 Text(
                   time,
-                  style: const TextStyle(
-                    color: textBlue,
+                  style: TextStyle(
+                    color: colorScheme.onSurfaceVariant,
                     fontSize: 11,
                   ),
                 ),
@@ -560,8 +582,8 @@ class _ReportCard extends StatelessWidget {
                     description,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: textBlue,
+                    style: TextStyle(
+                      color: colorScheme.onSurfaceVariant,
                       fontSize: 11,
                     ),
                   ),

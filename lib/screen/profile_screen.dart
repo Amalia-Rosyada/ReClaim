@@ -78,19 +78,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
 
       // APP BAR TANPA TOMBOL KEMBALI
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
+        backgroundColor: colorScheme.surface,
         elevation: 0,
         centerTitle: false,
-        title: const Text(
+        title: Text(
           'Profil',
           style: TextStyle(
-            color: darkBlue,
+            color: colorScheme.onSurface,
             fontSize: 23,
             fontWeight: FontWeight.bold,
           ),
@@ -113,14 +115,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Container(
                   width: 90,
                   height: 90,
-                  decoration: const BoxDecoration(
-                    color: lightBlue,
+                  decoration: BoxDecoration(
+                    color: colorScheme.primaryContainer,
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.person_rounded,
                     size: 50,
-                    color: primaryBlue,
+                    color: colorScheme.primary,
                   ),
                 ),
               ),
@@ -130,8 +132,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               // NAMA PENGGUNA
               Text(
                 _name,
-                style: const TextStyle(
-                  color: darkBlue,
+                style: TextStyle(
+                  color: colorScheme.onSurface,
                   fontSize: 21,
                   fontWeight: FontWeight.bold,
                 ),
@@ -142,8 +144,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               // EMAIL PENGGUNA
               Text(
                 _email,
-                style: const TextStyle(
-                  color: textBlue,
+                style: TextStyle(
+                  color: colorScheme.onSurfaceVariant,
                   fontSize: 13,
                 ),
               ),
@@ -152,6 +154,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
               // MENU BANTUAN
               _profileMenu(
+                context: context,
                 icon: Icons.help_outline_rounded,
                 title: 'Bantuan',
                 onTap: () {
@@ -163,6 +166,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
               // MENU PENGATURAN
               _profileMenu(
+                context: context,
                 icon: Icons.settings_outlined,
                 title: 'Pengaturan',
                 onTap: () {
@@ -174,6 +178,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
               // MENU RIWAYAT LAPORAN
               _profileMenu(
+                context: context,
                 icon: Icons.history_rounded,
                 title: 'Riwayat Laporan',
                 onTap: () {
@@ -188,6 +193,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
               // MENU KELUAR
               _profileMenu(
+                context: context,
                 icon: Icons.logout_rounded,
                 title: 'Keluar',
                 iconColor: Colors.red,
@@ -206,9 +212,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 4,
         type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
-        selectedItemColor: primaryBlue,
-        unselectedItemColor: textBlue,
+        backgroundColor: colorScheme.surface,
+        selectedItemColor: colorScheme.primary,
+        unselectedItemColor: colorScheme.onSurfaceVariant,
         elevation: 10,
 
         onTap: (index) {
@@ -278,12 +284,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
   // ============================================================
 
   Widget _profileMenu({
+    required BuildContext context,
     required IconData icon,
     required String title,
     required VoidCallback onTap,
-    Color iconColor = primaryBlue,
-    Color titleColor = darkBlue,
+    Color? iconColor,
+    Color? titleColor,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(17),
@@ -293,17 +302,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
           vertical: 17,
         ),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: colorScheme.surface,
           borderRadius: BorderRadius.circular(17),
           border: Border.all(
-            color: const Color(0xFFE0EAF5),
+            color: colorScheme.outlineVariant,
           ),
         ),
         child: Row(
           children: [
             Icon(
               icon,
-              color: iconColor,
+              color: iconColor ?? colorScheme.primary,
             ),
 
             const SizedBox(width: 14),
@@ -312,17 +321,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Text(
                 title,
                 style: TextStyle(
-                  color: titleColor,
+                  color: titleColor ?? colorScheme.onSurface,
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                 ),
               ),
             ),
 
-            const Icon(
+            Icon(
               Icons.arrow_forward_ios_rounded,
               size: 15,
-              color: textBlue,
+              color: colorScheme.onSurfaceVariant,
             ),
           ],
         ),

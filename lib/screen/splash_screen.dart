@@ -38,28 +38,34 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Mengambil warna berdasarkan tema yang sedang digunakan.
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDarkMode =
+        Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+
       body: Stack(
         children: [
           // Dekorasi atas
           Positioned(
             top: -80,
             left: -60,
-            child: _circleDecoration(220),
+            child: _circleDecoration(220, isDarkMode),
           ),
 
           Positioned(
             top: 20,
             right: -80,
-            child: _circleDecoration(180),
+            child: _circleDecoration(180, isDarkMode),
           ),
 
           // Dekorasi bawah
           Positioned(
             bottom: -90,
             left: -40,
-            child: _circleDecoration(230),
+            child: _circleDecoration(230, isDarkMode),
           ),
 
           SafeArea(
@@ -77,30 +83,32 @@ class _SplashScreenState extends State<SplashScreen> {
 
                 const SizedBox(height: 18),
 
-                const Text(
+                // Nama aplikasi
+                Text(
                   'ReClaim',
                   style: TextStyle(
                     fontSize: 42,
                     fontWeight: FontWeight.bold,
-                    color: darkBlue,
+                    color: colorScheme.onSurface,
                   ),
                 ),
 
                 const SizedBox(height: 8),
 
-                const Text(
+                // Slogan aplikasi
+                Text(
                   'Temukan. Kembalikan.',
                   style: TextStyle(
                     fontSize: 18,
-                    color: textBlue,
+                    color: colorScheme.onSurfaceVariant,
                   ),
                 ),
 
-                const Text(
+                Text(
                   'Jadi lebih baik.',
                   style: TextStyle(
                     fontSize: 18,
-                    color: textBlue,
+                    color: colorScheme.onSurfaceVariant,
                   ),
                 ),
 
@@ -145,12 +153,16 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
-  Widget _circleDecoration(double size) {
+  // ==================== DEKORASI LINGKARAN ====================
+
+  Widget _circleDecoration(double size, bool isDarkMode) {
     return Container(
       width: size,
       height: size,
-      decoration: const BoxDecoration(
-        color: lightBlue,
+      decoration: BoxDecoration(
+        color: isDarkMode
+            ? const Color(0xFF243750)
+            : lightBlue,
         shape: BoxShape.circle,
       ),
     );

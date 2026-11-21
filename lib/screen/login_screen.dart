@@ -115,8 +115,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: AuthBackground(
         child: SafeArea(
           child: SingleChildScrollView(
@@ -136,13 +138,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 12),
 
-                const Center(
+                // NAMA APLIKASI
+                Center(
                   child: Text(
                     'ReClaim',
                     style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.bold,
-                      color: darkBlue,
+                      color: colorScheme.onSurface,
                     ),
                   ),
                 ),
@@ -150,34 +153,34 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 45),
 
                 // JUDUL
-                const Text(
+                Text(
                   'Selamat Datang!',
                   style: TextStyle(
                     fontSize: 29,
                     fontWeight: FontWeight.bold,
-                    color: darkBlue,
+                    color: colorScheme.onSurface,
                   ),
                 ),
 
                 const SizedBox(height: 8),
 
-                const Text(
+                Text(
                   'Masuk untuk melanjutkan ke akun Anda.',
                   style: TextStyle(
                     fontSize: 16,
-                    color: textBlue,
+                    color: colorScheme.onSurfaceVariant,
                   ),
                 ),
 
                 const SizedBox(height: 30),
 
                 // EMAIL
-                _emailInputField(),
+                _emailInputField(context),
 
                 const SizedBox(height: 16),
 
                 // PASSWORD
-                _passwordInputField(),
+                _passwordInputField(context),
 
                 const SizedBox(height: 12),
 
@@ -211,12 +214,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 25),
 
                 // PEMISAH
-                _orDivider(),
+                _orDivider(context),
 
                 const SizedBox(height: 20),
 
                 // GOOGLE
                 _googleButton(
+                  context,
                   title: 'Masuk dengan Google',
                 ),
 
@@ -227,9 +231,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
+                      Text(
                         'Belum punya akun? ',
-                        style: TextStyle(color: textBlue),
+                        style: TextStyle(
+                          color: colorScheme.onSurfaceVariant,
+                        ),
                       ),
                       GestureDetector(
                         onTap: _isLoggingIn
@@ -263,33 +269,40 @@ class _LoginScreenState extends State<LoginScreen> {
   // EMAIL FIELD
   // ============================================================
 
-  Widget _emailInputField() {
+  Widget _emailInputField(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return TextField(
       controller: _emailController,
       keyboardType: TextInputType.emailAddress,
+      style: TextStyle(
+        color: colorScheme.onSurface,
+      ),
       decoration: InputDecoration(
         hintText: 'Email',
-        hintStyle: const TextStyle(color: textBlue),
-        prefixIcon: const Icon(
+        hintStyle: TextStyle(
+          color: colorScheme.onSurfaceVariant,
+        ),
+        prefixIcon: Icon(
           Icons.email_outlined,
-          color: darkBlue,
+          color: colorScheme.onSurfaceVariant,
         ),
         filled: true,
-        fillColor: Colors.white,
+        fillColor: colorScheme.surface,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 18,
           vertical: 18,
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
-          borderSide: const BorderSide(
-            color: Color(0xFFD8E5F3),
+          borderSide: BorderSide(
+            color: colorScheme.outlineVariant,
           ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
-          borderSide: const BorderSide(
-            color: Color(0xFFD8E5F3),
+          borderSide: BorderSide(
+            color: colorScheme.outlineVariant,
           ),
         ),
         focusedBorder: OutlineInputBorder(
@@ -307,16 +320,23 @@ class _LoginScreenState extends State<LoginScreen> {
   // PASSWORD FIELD
   // ============================================================
 
-  Widget _passwordInputField() {
+  Widget _passwordInputField(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return TextField(
       controller: _passwordController,
       obscureText: _obscurePassword,
+      style: TextStyle(
+        color: colorScheme.onSurface,
+      ),
       decoration: InputDecoration(
         hintText: 'Password',
-        hintStyle: const TextStyle(color: textBlue),
-        prefixIcon: const Icon(
+        hintStyle: TextStyle(
+          color: colorScheme.onSurfaceVariant,
+        ),
+        prefixIcon: Icon(
           Icons.lock_outline,
-          color: darkBlue,
+          color: colorScheme.onSurfaceVariant,
         ),
         suffixIcon: IconButton(
           onPressed: () {
@@ -328,25 +348,25 @@ class _LoginScreenState extends State<LoginScreen> {
             _obscurePassword
                 ? Icons.visibility_outlined
                 : Icons.visibility_off_outlined,
-            color: darkBlue,
+            color: colorScheme.onSurfaceVariant,
           ),
         ),
         filled: true,
-        fillColor: Colors.white,
+        fillColor: colorScheme.surface,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 18,
           vertical: 18,
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
-          borderSide: const BorderSide(
-            color: Color(0xFFD8E5F3),
+          borderSide: BorderSide(
+            color: colorScheme.outlineVariant,
           ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
-          borderSide: const BorderSide(
-            color: Color(0xFFD8E5F3),
+          borderSide: BorderSide(
+            color: colorScheme.outlineVariant,
           ),
         ),
         focusedBorder: OutlineInputBorder(
@@ -400,7 +420,12 @@ class _LoginScreenState extends State<LoginScreen> {
   // GOOGLE BUTTON
   // ============================================================
 
-  Widget _googleButton({required String title}) {
+  Widget _googleButton(
+    BuildContext context, {
+    required String title,
+  }) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return SizedBox(
       width: double.infinity,
       height: 55,
@@ -409,9 +434,10 @@ class _LoginScreenState extends State<LoginScreen> {
           _showMessage('Login dengan Google belum tersedia.');
         },
         style: OutlinedButton.styleFrom(
-          foregroundColor: darkBlue,
-          side: const BorderSide(
-            color: Color(0xFFD8E5F3),
+          foregroundColor: colorScheme.onSurface,
+          backgroundColor: colorScheme.surface,
+          side: BorderSide(
+            color: colorScheme.outlineVariant,
           ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(18),
@@ -451,24 +477,28 @@ class _LoginScreenState extends State<LoginScreen> {
   // OR DIVIDER
   // ============================================================
 
-  Widget _orDivider() {
+  Widget _orDivider(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Row(
       children: [
-        const Expanded(
+        Expanded(
           child: Divider(
-            color: Color(0xFFD8E5F3),
+            color: colorScheme.outlineVariant,
           ),
         ),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 15),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Text(
             'atau',
-            style: TextStyle(color: textBlue),
+            style: TextStyle(
+              color: colorScheme.onSurfaceVariant,
+            ),
           ),
         ),
-        const Expanded(
+        Expanded(
           child: Divider(
-            color: Color(0xFFD8E5F3),
+            color: colorScheme.outlineVariant,
           ),
         ),
       ],

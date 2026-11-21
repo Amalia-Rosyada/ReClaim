@@ -83,6 +83,9 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
           content: TextField(
             controller: controller,
             keyboardType: keyboardType,
+            style: TextStyle(
+              color: Theme.of(dialogContext).colorScheme.onSurface,
+            ),
             decoration: InputDecoration(
               labelText: title,
               border: const OutlineInputBorder(),
@@ -266,25 +269,27 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
 
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: colorScheme.surface,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(
+          icon: Icon(
             Icons.arrow_back_ios_new_rounded,
-            color: darkBlue,
+            color: colorScheme.onSurface,
           ),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        title: const Text(
+        title: Text(
           'Detail Profil',
           style: TextStyle(
-            color: darkBlue,
+            color: colorScheme.onSurface,
             fontSize: 21,
             fontWeight: FontWeight.bold,
           ),
@@ -299,6 +304,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
 
               // NOMOR TELEPON
               _profileItem(
+                context: context,
                 icon: Icons.phone_outlined,
                 title: 'Nomor telepon',
                 value: _displayValue(_phone),
@@ -314,6 +320,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
 
               // NAMA LENGKAP
               _profileItem(
+                context: context,
                 icon: Icons.person_outline_rounded,
                 title: 'Nama lengkap',
                 value: _displayValue(_name),
@@ -328,6 +335,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
 
               // JENIS KELAMIN
               _profileItem(
+                context: context,
                 icon: Icons.wc_outlined,
                 title: 'Jenis kelamin',
                 value: _displayValue(_gender),
@@ -336,6 +344,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
 
               // TANGGAL LAHIR
               _profileItem(
+                context: context,
                 icon: Icons.calendar_month_outlined,
                 title: 'Tanggal lahir',
                 value: _displayValue(_birthDate),
@@ -344,6 +353,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
 
               // EMAIL
               _profileItem(
+                context: context,
                 icon: Icons.mail_outline_rounded,
                 title: 'Email',
                 value: _displayValue(_email),
@@ -399,11 +409,14 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
   // ============================================================
 
   Widget _profileItem({
+    required BuildContext context,
     required IconData icon,
     required String title,
     required String value,
     required VoidCallback onTap,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return InkWell(
       onTap: onTap,
       child: Container(
@@ -416,7 +429,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
           children: [
             Icon(
               icon,
-              color: primaryBlue,
+              color: colorScheme.primary,
               size: 30,
             ),
 
@@ -428,8 +441,8 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
-                      color: textBlue,
+                    style: TextStyle(
+                      color: colorScheme.onSurfaceVariant,
                       fontSize: 15,
                     ),
                   ),
@@ -438,8 +451,8 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
 
                   Text(
                     value,
-                    style: const TextStyle(
-                      color: darkBlue,
+                    style: TextStyle(
+                      color: colorScheme.onSurface,
                       fontSize: 17,
                       fontWeight: FontWeight.w500,
                     ),
@@ -448,9 +461,9 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
               ),
             ),
 
-            const Icon(
+            Icon(
               Icons.chevron_right_rounded,
-              color: textBlue,
+              color: colorScheme.onSurfaceVariant,
               size: 28,
             ),
           ],

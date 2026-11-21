@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'splash_screen.dart';
 
@@ -43,61 +42,69 @@ class HelpScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: colorScheme.surface,
         elevation: 0,
         automaticallyImplyLeading: false,
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: const Icon(
+          icon: Icon(
             Icons.arrow_back_ios_new,
-            color: darkBlue,
+            color: colorScheme.onSurface,
             size: 20,
           ),
         ),
-        title: const Text(
+        title: Text(
           'Bantuan',
           style: TextStyle(
-            color: darkBlue,
+            color: colorScheme.onSurface,
             fontSize: 23,
             fontWeight: FontWeight.bold,
           ),
         ),
       ),
+
       body: ListView(
         padding: const EdgeInsets.all(24),
         children: [
+          // ====================================================
+          // KARTU PEMBUKA BANTUAN
+          // ====================================================
+
           Container(
             padding: const EdgeInsets.all(22),
             decoration: BoxDecoration(
-              color: lightBlue,
+              color: colorScheme.primaryContainer,
               borderRadius: BorderRadius.circular(18),
             ),
-            child: const Column(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Icon(
                   Icons.support_agent_rounded,
-                  color: primaryBlue,
+                  color: colorScheme.primary,
                   size: 42,
                 ),
-                SizedBox(height: 14),
+                const SizedBox(height: 14),
                 Text(
                   'Ada yang bisa kami bantu?',
                   style: TextStyle(
-                    color: darkBlue,
+                    color: colorScheme.onPrimaryContainer,
                     fontSize: 19,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(
                   'Temukan panduan penggunaan ReClaim '
                   'dan jawaban dari pertanyaan umum di bawah ini.',
                   style: TextStyle(
-                    color: textBlue,
+                    color: colorScheme.onPrimaryContainer,
                     fontSize: 13,
                     height: 1.5,
                   ),
@@ -108,31 +115,41 @@ class HelpScreen extends StatelessWidget {
 
           const SizedBox(height: 28),
 
-          const Text(
+          // ====================================================
+          // PANDUAN PENGGUNAAN
+          // ====================================================
+
+          Text(
             'Panduan Penggunaan',
             style: TextStyle(
-              color: darkBlue,
+              color: colorScheme.onSurface,
               fontSize: 17,
               fontWeight: FontWeight.bold,
             ),
           ),
+
           const SizedBox(height: 14),
 
           _buildGuide(
+            context: context,
             icon: Icons.search_rounded,
             title: 'Cari Barang',
             description:
                 'Gunakan menu Pencarian untuk mencari '
                 'informasi barang hilang atau ditemukan.',
           ),
+
           _buildGuide(
+            context: context,
             icon: Icons.add_circle_outline_rounded,
             title: 'Buat Laporan',
             description:
                 'Pilih menu Tambah (+), isi informasi barang, '
                 'lalu kirim laporan.',
           ),
+
           _buildGuide(
+            context: context,
             icon: Icons.history_rounded,
             title: 'Periksa Riwayat',
             description:
@@ -142,24 +159,29 @@ class HelpScreen extends StatelessWidget {
 
           const SizedBox(height: 24),
 
-          const Text(
+          // ====================================================
+          // PERTANYAAN UMUM (FAQ)
+          // ====================================================
+
+          Text(
             'Pertanyaan Umum (FAQ)',
             style: TextStyle(
-              color: darkBlue,
+              color: colorScheme.onSurface,
               fontSize: 17,
               fontWeight: FontWeight.bold,
             ),
           ),
+
           const SizedBox(height: 10),
 
           ..._faqs.map(
             (faq) => Container(
               margin: const EdgeInsets.only(bottom: 10),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: colorScheme.surface,
                 borderRadius: BorderRadius.circular(14),
                 border: Border.all(
-                  color: const Color(0xFFE0EAF5),
+                  color: colorScheme.outlineVariant,
                 ),
               ),
               child: ExpansionTile(
@@ -173,12 +195,12 @@ class HelpScreen extends StatelessWidget {
                     Radius.circular(14),
                   ),
                 ),
-                iconColor: primaryBlue,
-                collapsedIconColor: textBlue,
+                iconColor: colorScheme.primary,
+                collapsedIconColor: colorScheme.onSurfaceVariant,
                 title: Text(
                   faq['question']!,
-                  style: const TextStyle(
-                    color: darkBlue,
+                  style: TextStyle(
+                    color: colorScheme.onSurface,
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
                   ),
@@ -191,8 +213,8 @@ class HelpScreen extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       faq['answer']!,
-                      style: const TextStyle(
-                        color: textBlue,
+                      style: TextStyle(
+                        color: colorScheme.onSurfaceVariant,
                         fontSize: 12,
                         height: 1.6,
                       ),
@@ -205,11 +227,15 @@ class HelpScreen extends StatelessWidget {
 
           const SizedBox(height: 20),
 
-          const Center(
+          // ====================================================
+          // VERSI APLIKASI
+          // ====================================================
+
+          Center(
             child: Text(
               'ReClaim v1.0.0',
               style: TextStyle(
-                color: textBlue,
+                color: colorScheme.onSurfaceVariant,
                 fontSize: 12,
               ),
             ),
@@ -219,11 +245,18 @@ class HelpScreen extends StatelessWidget {
     );
   }
 
+  // ============================================================
+  // WIDGET PANDUAN PENGGUNAAN
+  // ============================================================
+
   static Widget _buildGuide({
+    required BuildContext context,
     required IconData icon,
     required String title,
     required String description,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Row(
@@ -233,32 +266,36 @@ class HelpScreen extends StatelessWidget {
             width: 44,
             height: 44,
             decoration: BoxDecoration(
-              color: lightBlue,
+              color: colorScheme.primaryContainer,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
               icon,
-              color: primaryBlue,
+              color: colorScheme.primary,
             ),
           ),
+
           const SizedBox(width: 14),
+
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
-                    color: darkBlue,
+                  style: TextStyle(
+                    color: colorScheme.onSurface,
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
+
                 const SizedBox(height: 5),
+
                 Text(
                   description,
-                  style: const TextStyle(
-                    color: textBlue,
+                  style: TextStyle(
+                    color: colorScheme.onSurfaceVariant,
                     fontSize: 12,
                     height: 1.5,
                   ),

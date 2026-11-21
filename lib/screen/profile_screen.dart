@@ -1,8 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'splash_screen.dart';
+import 'profile_detail_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -34,6 +34,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
       _name = prefs.getString('user_name') ?? 'Pengguna';
       _email = prefs.getString('user_email') ?? '-';
     });
+  }
+
+  // ============================================================
+  // MEMBUKA DETAIL PROFIL
+  // ============================================================
+
+  Future<void> _openProfileDetail() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const ProfileDetailScreen(),
+      ),
+    );
+
+    if (!mounted) return;
+
+    // Memuat ulang data setelah kembali dari Detail Profil.
+    await _loadProfile();
   }
 
   // ============================================================
@@ -89,17 +107,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Column(
             children: [
               // FOTO PROFIL
-              Container(
-                width: 90,
-                height: 90,
-                decoration: const BoxDecoration(
-                  color: lightBlue,
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.person_rounded,
-                  size: 50,
-                  color: primaryBlue,
+              InkWell(
+                onTap: _openProfileDetail,
+                borderRadius: BorderRadius.circular(50),
+                child: Container(
+                  width: 90,
+                  height: 90,
+                  decoration: const BoxDecoration(
+                    color: lightBlue,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.person_rounded,
+                    size: 50,
+                    color: primaryBlue,
+                  ),
                 ),
               ),
 

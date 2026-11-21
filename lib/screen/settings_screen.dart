@@ -1,11 +1,16 @@
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'splash_screen.dart';
+import '../theme_controller.dart';
 
 class SettingsScreen extends StatefulWidget {
-  const SettingsScreen({super.key});
+  final ThemeController themeController;
+
+  const SettingsScreen({
+    super.key,
+    required this.themeController,
+  });
 
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
@@ -60,7 +65,92 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  // Menampilkan pilihan tema Terang dan Gelap.
+  void _showThemeOptions() {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            final selectedTheme = widget.themeController.themeMode;
+
+            return AlertDialog(
+              title: const Text(
+                'Penampilan Tema',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  RadioListTile<ThemeMode>(
+                    value: ThemeMode.light,
+                    groupValue: selectedTheme,
+                    activeColor: primaryBlue,
+                    contentPadding: EdgeInsets.zero,
+                    title: const Text('Terang'),
+                    subtitle: const Text(
+                      'Gunakan tampilan terang.',
+                    ),
+                    secondary: const Icon(Icons.light_mode_outlined),
+                    onChanged: (value) async {
+                      if (value == null) return;
+
+                      await widget.themeController.setThemeMode(value);
+
+                      if (!mounted) return;
+
+                      setDialogState(() {});
+                      Navigator.pop(dialogContext);
+                    },
+                  ),
+                  RadioListTile<ThemeMode>(
+                    value: ThemeMode.dark,
+                    groupValue: selectedTheme,
+                    activeColor: primaryBlue,
+                    contentPadding: EdgeInsets.zero,
+                    title: const Text('Gelap'),
+                    subtitle: const Text(
+                      'Gunakan tampilan gelap.',
+                    ),
+                    secondary: const Icon(Icons.dark_mode_outlined),
+                    onChanged: (value) async {
+                      if (value == null) return;
+
+                      await widget.themeController.setThemeMode(value);
+
+                      if (!mounted) return;
+
+                      setDialogState(() {});
+                      Navigator.pop(dialogContext);
+                    },
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(dialogContext),
+                  child: Text(
+                    'Tutup',
+                    style: TextStyle(
+                      color: colorScheme.primary,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
   void _showAccountInfo() {
+    final colorScheme = Theme.of(context).colorScheme;
+
     showDialog(
       context: context,
       builder: (dialogContext) {
@@ -68,7 +158,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
           title: const Text(
             'Informasi Akun',
             style: TextStyle(
-              color: darkBlue,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -76,28 +165,34 @@ class _SettingsScreenState extends State<SettingsScreen> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 'Nama',
-                style: TextStyle(color: textBlue, fontSize: 12),
+                style: TextStyle(
+                  color: colorScheme.primary,
+                  fontSize: 12,
+                ),
               ),
               const SizedBox(height: 4),
               Text(
                 _name,
-                style: const TextStyle(
-                  color: darkBlue,
+                style: TextStyle(
+                  color: colorScheme.onSurface,
                   fontWeight: FontWeight.w600,
                 ),
               ),
               const SizedBox(height: 16),
-              const Text(
+              Text(
                 'Email',
-                style: TextStyle(color: textBlue, fontSize: 12),
+                style: TextStyle(
+                  color: colorScheme.primary,
+                  fontSize: 12,
+                ),
               ),
               const SizedBox(height: 4),
               Text(
                 _email,
-                style: const TextStyle(
-                  color: darkBlue,
+                style: TextStyle(
+                  color: colorScheme.onSurface,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -135,25 +230,31 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+    final currentThemeName =
+        widget.themeController.isDarkMode ? 'Gelap' : 'Terang';
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
 
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         elevation: 0,
         automaticallyImplyLeading: false,
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: const Icon(
+          icon: Icon(
             Icons.arrow_back_ios_new,
-            color: darkBlue,
+            color: colorScheme.onSurface,
             size: 20,
           ),
         ),
-        title: const Text(
+        title: Text(
           'Pengaturan',
           style: TextStyle(
-            color: darkBlue,
+            color: colorScheme.onSurface,
             fontSize: 23,
             fontWeight: FontWeight.bold,
           ),
@@ -168,10 +269,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
             : ListView(
                 padding: const EdgeInsets.all(24),
                 children: [
-                  const Text(
+                  Text(
                     'Preferensi',
                     style: TextStyle(
-                      color: darkBlue,
+                      color: colorScheme.onSurface,
                       fontSize: 17,
                       fontWeight: FontWeight.bold,
                     ),
@@ -193,12 +294,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     },
                   ),
 
+                  const SizedBox(height: 12),
+
+                  _buildSettingCard(
+                    icon: Icons.palette_outlined,
+                    title: 'Penampilan Tema',
+                    subtitle: 'Tema saat ini: $currentThemeName',
+                    onTap: _showThemeOptions,
+                  ),
+
                   const SizedBox(height: 28),
 
-                  const Text(
+                  Text(
                     'Akun',
                     style: TextStyle(
-                      color: darkBlue,
+                      color: colorScheme.onSurface,
                       fontSize: 17,
                       fontWeight: FontWeight.bold,
                     ),
@@ -215,10 +325,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                   const SizedBox(height: 28),
 
-                  const Text(
+                  Text(
                     'Tentang',
                     style: TextStyle(
-                      color: darkBlue,
+                      color: colorScheme.onSurface,
                       fontSize: 17,
                       fontWeight: FontWeight.bold,
                     ),
@@ -235,11 +345,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                   const SizedBox(height: 30),
 
-                  const Center(
+                  Center(
                     child: Text(
                       'ReClaim v1.0.0',
                       style: TextStyle(
-                        color: textBlue,
+                        color: colorScheme.onSurfaceVariant,
                         fontSize: 12,
                       ),
                     ),
@@ -257,8 +367,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
     Widget? trailing,
     required VoidCallback onTap,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Material(
-      color: Colors.white,
+      color: colorScheme.surface,
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
         onTap: onTap,
@@ -271,7 +384,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: const Color(0xFFE0EAF5),
+              color: colorScheme.outlineVariant,
             ),
           ),
           child: Row(
@@ -280,12 +393,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 width: 43,
                 height: 43,
                 decoration: BoxDecoration(
-                  color: lightBlue,
+                  color: isDarkMode
+                      ? colorScheme.primary.withOpacity(0.15)
+                      : lightBlue,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
                   icon,
-                  color: primaryBlue,
+                  color: colorScheme.primary,
                 ),
               ),
 
@@ -297,8 +412,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   children: [
                     Text(
                       title,
-                      style: const TextStyle(
-                        color: darkBlue,
+                      style: TextStyle(
+                        color: colorScheme.onSurface,
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
                       ),
@@ -306,8 +421,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     const SizedBox(height: 4),
                     Text(
                       subtitle,
-                      style: const TextStyle(
-                        color: textBlue,
+                      style: TextStyle(
+                        color: colorScheme.onSurfaceVariant,
                         fontSize: 11,
                       ),
                     ),
@@ -318,9 +433,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
               if (trailing != null)
                 trailing
               else
-                const Icon(
+                Icon(
                   Icons.chevron_right_rounded,
-                  color: textBlue,
+                  color: colorScheme.onSurfaceVariant,
                 ),
             ],
           ),

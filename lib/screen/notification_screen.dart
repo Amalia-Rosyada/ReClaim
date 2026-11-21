@@ -38,24 +38,6 @@ class NotificationScreen extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 16),
-
-            _notificationCard(
-              icon: Icons.check_circle_outline,
-              title: 'Laporan berhasil dibuat',
-              message: 'Laporan barang kamu berhasil dikirim.',
-              time: 'Baru saja',
-            ),
-
-            const SizedBox(height: 12),
-
-            _notificationCard(
-              icon: Icons.search_rounded,
-              title: 'Ada barang yang cocok',
-              message: 'Sistem menemukan barang yang mungkin sesuai dengan laporanmu.',
-              time: '1 jam yang lalu',
-            ),
-
             const SizedBox(height: 12),
 
             _notificationCard(
